@@ -1,4 +1,4 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
+﻿
 
 using System;
 using System.Drawing;
@@ -55,7 +55,8 @@ public static class Palette
 		Transperent = Color.FromArgb(0, 0, 0, 0);
 	}
 }
-public static class ColorExtensions {
+public static class ColorExtensions
+{
 	public static Color Reverse(this Color color)
 	{
 		return Color.FromArgb(255 - color.R, 255 - color.G, 255 - color.B);

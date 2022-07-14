@@ -9,7 +9,7 @@ public class Program : ExecutorMain
 		SystemType = SystemType.Windows;
 
 		ParseParams(args);
-		
+
 
 		ContentList.RegistryAll();
 
@@ -21,7 +21,7 @@ public class Program : ExecutorMain
 		{
 			string arg = arguments[i];
 
-			switch(arg)
+			switch (arg)
 			{
 
 			}

@@ -1,4 +1,4 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
+﻿
 
 using SkyFacture.Content.Abstractions;
 
@@ -60,7 +60,7 @@ public static class Registrator
 
 				Capacity = newCapacity;
 				T[] newItems = new T[Capacity];
-				
+
 				items.CopyTo(newItems, 0);
 				items = newItems;
 			}

@@ -1,7 +1,4 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
-
-using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Compression;
 
 namespace SkyFacture.IO;

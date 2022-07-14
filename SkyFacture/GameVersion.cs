@@ -1,10 +1,6 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
+﻿
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SkyFacture;
 public readonly struct GameVersion : IEquatable<GameVersion>, IComparable<GameVersion>
@@ -17,16 +13,16 @@ public readonly struct GameVersion : IEquatable<GameVersion>, IComparable<GameVe
 		this.revision = r;
 	}
 	public override string ToString()
-		=> $"V{version}r{revision}";
+		=> $"V{this.version}r{this.revision}";
 
 	public override bool Equals(object? obj)
 		=> obj is GameVersion gv && Equals(gv);
-	public bool Equals(GameVersion other) 
+	public bool Equals(GameVersion other)
 		=> this.version == other.version && this.revision == other.revision;
 	public int CompareTo(GameVersion other)
-		=> this.CalculateValue() - other.CalculateValue();
+		=> CalculateValue() - other.CalculateValue();
 	public int CalculateValue()
-		=> (this.version << sizeof(ushort) * 8) + revision;
+		=> (this.version << sizeof(ushort) * 8) + this.revision;
 
 	public override int GetHashCode()
 		=> CalculateValue();

@@ -1,6 +1,4 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
-
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace SkyFacture.Drawing.Shading;
@@ -18,11 +16,11 @@ public class Blend : IGLGlobalFunc, IEquatable<Blend>
 	public Blend(BlendingFactorSrc colorSrc, BlendingFactorDest colorDest, BlendingFactorSrc alphaSrc, BlendingFactorDest alphaDest) : this(colorSrc, colorDest, alphaSrc, alphaDest, BlendEquationMode.FuncAdd) { }
 	public Blend(BlendingFactorSrc colorSrc, BlendingFactorDest colorDest, BlendingFactorSrc alphaSrc, BlendingFactorDest alphaDest, BlendEquationMode mode)
 	{
-		ColorBlendingSrc = colorSrc;
-		ColorBlendingDest = colorDest;
-		AlphaBlendingSrc = alphaSrc;
-		AlphaBlendingDest = alphaDest;
-		Mode = mode;
+		this.ColorBlendingSrc = colorSrc;
+		this.ColorBlendingDest = colorDest;
+		this.AlphaBlendingSrc = alphaSrc;
+		this.AlphaBlendingDest = alphaDest;
+		this.Mode = mode;
 	}
 	public override bool Equals(object? other)
 		=> other is Blend blend && Equals(blend);
@@ -34,11 +32,11 @@ public class Blend : IGLGlobalFunc, IEquatable<Blend>
 		&& this.AlphaBlendingDest == other.AlphaBlendingDest
 		&& this.Mode == other.Mode;
 	public override int GetHashCode()
-		=> HashCode.Combine(ColorBlendingSrc, ColorBlendingDest, AlphaBlendingSrc, AlphaBlendingDest);
+		=> HashCode.Combine(this.ColorBlendingSrc, this.ColorBlendingDest, this.AlphaBlendingSrc, this.AlphaBlendingDest);
 	public void Use()
 	{
-		GL.BlendFuncSeparate(ColorBlendingSrc, ColorBlendingDest, AlphaBlendingSrc, AlphaBlendingDest);
-		GL.BlendEquation(Mode);
+		GL.BlendFuncSeparate(this.ColorBlendingSrc, this.ColorBlendingDest, this.AlphaBlendingSrc, this.AlphaBlendingDest);
+		GL.BlendEquation(this.Mode);
 	}
 
 	public static readonly Blend Default, Difference, Lighten, Darken, Negative, Additive;

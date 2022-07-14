@@ -1,11 +1,6 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
+﻿
 
 using SkyFacture.Geometry;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SkyFacture.Drawing.Sprites;
 public class Region2D

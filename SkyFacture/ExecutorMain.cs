@@ -1,4 +1,4 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
+﻿
 using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
@@ -29,7 +29,7 @@ public unsafe class ExecutorMain
 			Title = GameName,
 		}
 		);
-#pragma warning disable CS8618 
+#pragma warning disable CS8618
 	public static LoadingProgress LoadingProgress { get; private set; }
 	private static Scenes.Scene? scene;
 	public static Scenes.Scene Scene
@@ -42,13 +42,13 @@ public unsafe class ExecutorMain
 			scene.Init();
 		}
 	}
-	public static GameVersion Version => new(V:0, r:1);
-	public static SystemType SystemType { get; internal protected set; }
+	public static GameVersion Version => new(V: 0, r: 1);
+	public static SystemType SystemType { get; protected internal set; }
 	public const string GameName = "Sky Facture";
 	public const string Package = "NiTiS.Dev.SkyFacture";
 	public const string PackageLowerCase = "nitis.dev.skyfacture";
 #pragma warning restore CS8618
-	internal protected static void Launch()
+	protected internal static void Launch()
 	{
 		window.Load += Load;
 		window.RenderFrame += GraphicUpdate;
@@ -59,7 +59,7 @@ public unsafe class ExecutorMain
 
 		window.Run();
 	}
-	private static Camera Camera; 
+	private static Camera Camera;
 	private static Texture2D Andrew, Rainbow;
 	private static int VBO, VAO;
 	public static readonly float[] Vert = new float[]
@@ -71,11 +71,13 @@ public unsafe class ExecutorMain
 		-0.5f,  0.5f, 0, 1,
 		-0.5f, -0.5f, 0, 0,
 	};
-	internal protected static void Load()
+	protected internal static void Load()
 	{
 		Console.WriteLine("Max Texture Binding: " + GL.GetInteger(GetPName.MaxTextureImageUnits));
 
 		Blend.Enable();
+
+		Atlas.LoadInternalRegions();
 
 		Andrew = new(File.OpenRead("GameContent/Textures/andrew.png"));
 		Rainbow = new(File.OpenRead("GameContent/Textures/rainbow.png"));
@@ -90,7 +92,7 @@ public unsafe class ExecutorMain
 		Camera = new();
 		Camera.Select();
 	}
-	internal protected static void GraphicUpdate(FrameEventArgs args)
+	protected internal static void GraphicUpdate(FrameEventArgs args)
 	{
 		Time.RenderDelta = args.Time;
 		Time.RenderTime += args.Time;
@@ -106,23 +108,24 @@ public unsafe class ExecutorMain
 
 		mat4 ident = mat4.Identity;
 		ident *= Camera.GetTranslation();
-		ident *= mat4.CreateScale(40f);
+		ident *= mat4.CreateScale(50f, 50f, 1f);
 		ident *= Camera.GetView();
 
 		_ = Atlas.Transperent;
 
 		Shaders.DefShader.Texture(TextureUnit.Texture0);
+		Shaders.DefShader.Matrix(ident);
 		GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
-		
+
 		window.Context.SwapBuffers();
 	}
-	internal protected static void Resize(ResizeEventArgs args)
+	protected internal static void Resize(ResizeEventArgs args)
 	{
 		GL.Viewport(0, 0, args.Width, args.Height);
 		Screen.Width = args.Width;
 		Screen.Height = args.Height;
 	}
-	internal protected static void Update(FrameEventArgs args)
+	protected internal static void Update(FrameEventArgs args)
 	{
 		Time.UpdateDelta = args.Time;
 		Time.UpdateTime += args.Time;
@@ -135,11 +138,11 @@ public unsafe class ExecutorMain
 			return;
 		}
 	}
-	internal protected static void KeyUp(KeyboardKeyEventArgs args)
+	protected internal static void KeyUp(KeyboardKeyEventArgs args)
 	{
 
 	}
-	internal protected static void KeyDown(KeyboardKeyEventArgs args)
+	protected internal static void KeyDown(KeyboardKeyEventArgs args)
 	{
 		if (args.Key == Keys.F11)
 		{

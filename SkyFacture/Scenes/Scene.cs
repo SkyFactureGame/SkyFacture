@@ -1,5 +1,4 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
-using System;
+﻿using System;
 
 namespace SkyFacture.Scenes;
 public abstract class Scene : IDisposable

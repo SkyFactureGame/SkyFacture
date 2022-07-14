@@ -1,22 +1,11 @@
-﻿global using static SkyFacture.ExecutorMain;
-global using SkyFacture.Content;
+﻿global using SkyFacture.Content;
 global using System.Collections.Generic;
-global using System.Threading.Tasks;
-global using System.Threading;
-global using System.Text;
 global using System.Linq;
-global using NiTiS.Additions;
-global using System.Numerics;
-
+global using mat4 = OpenTK.Mathematics.Matrix4;
 global using vec2 = OpenTK.Mathematics.Vector2;
+global using vec2i = OpenTK.Mathematics.Vector2i;
 global using vec3 = OpenTK.Mathematics.Vector3;
 global using vec4 = OpenTK.Mathematics.Vector4;
-
-global using vec2i = OpenTK.Mathematics.Vector2i;
-global using vec3i = OpenTK.Mathematics.Vector3i;
-global using vec4i = OpenTK.Mathematics.Vector4i;
-
-global using mat4 = OpenTK.Mathematics.Matrix4;
 
 public static class NumberExtensions
 {

@@ -1,7 +1,7 @@
-﻿blending: false
+blending: false
 textures:
-	- name: black
-	  pos: 0,0
+  - name: black
+    pos: 0,0
     size: 32,32
   - name: white
     pos: 32,32

@@ -1,9 +1,9 @@
-﻿// The NiTiS-Dev licenses this file to you under the MIT license.
+﻿
 
 using SkyFacture.Content.Registry;
 
 namespace SkyFacture.Content.Abstractions;
-public abstract class ContentRegistry<TSelf, T> 
+public abstract class ContentRegistry<TSelf, T>
 	where T : IContentType
 	where TSelf : ContentRegistry<TSelf, T>
 {
