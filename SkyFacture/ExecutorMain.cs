@@ -27,6 +27,7 @@ public unsafe class ExecutorMain
 			API = OpenTK.Windowing.Common.ContextAPI.OpenGL,
 			APIVersion = new(3, 3),
 			Size = new(640, 320),
+			NumberOfSamples = 2,
 			Title = GameName,
 		}
 		);
@@ -63,24 +64,25 @@ public unsafe class ExecutorMain
 	}
 	private static Camera Camera;
 	private static Texture2D Andrew, Rainbow;
+	private static Region2D White;
 	private static int VBO, VAO;
 	public static readonly float[] Vert = new float[]
 	{
-		-0.5f, -0.5f, 0, 0, 1,
-		 0.5f, -0.5f, 1, 0, 1,
-		 0.5f,  0.5f, 1, 1, 0,
-		 0.5f,  0.5f, 1, 1, 1,
-		-0.5f,  0.5f, 0, 1, 1,
-		-0.5f, -0.5f, 0, 0, 1
+		-0.505f, -0.505f, 0, 0,    0, 0, 0, 1,
+		 0.505f, -0.505f, 1, 0,    0, 0, 0, 1,
+		 0.505f,  0.505f, 1, 1,    0, 0, 0, 1,
+		 0.505f,  0.505f, 1, 1,    0, 0, 0, 1,
+		-0.505f,  0.505f, 0, 1,    0, 0, 0, 1,
+		-0.505f, -0.505f, 0, 0,    0, 0, 0, 1,
 	};
-	public static readonly byte[] VertColor = new byte[]
+	public static readonly float[] VertColor = new float[]
 	{
-		255, 255, 255, 255,
-		255, 255, 255, 255,
-		255, 255, 255, 255,
-		255, 255, 255, 255,
-		255, 255, 255, 255,
-		255, 255, 255, 255
+		1, 1, 1, 1,
+		1, 0, 1, 1,
+		1, 1, 1, 1,
+		1, 1, 0, 1,
+		1, 0, 1, 1,
+		1, 1, 1, 1
 	};
 	protected internal static void Load()
 	{
@@ -93,13 +95,14 @@ public unsafe class ExecutorMain
 		Andrew = new(File.OpenRead("GameContent/Textures/andrew.png"));
 		Rainbow = new(File.OpenRead("GameContent/Textures/rainbow.png"));
 
+		White = Atlas.Region("white")!;
+
 		VAO = GL.GenVertexArray();
 		GL.BindVertexArray(VAO);
 
 		VBO = GL.GenBuffer();
 		GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-		GL.BufferData(BufferTarget.ArrayBuffer, Vert.Length * sizeof(float), Vert, BufferUsageHint.StaticDraw);
-		GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)(sizeof(float) * 1), sizeof(byte), VertColor);
+		GL.BufferData(BufferTarget.ArrayBuffer, Vert.Length * sizeof(float), Vert, BufferUsageHint.StreamDraw);
 
 		Camera = new();
 		Camera.Select();
@@ -115,9 +118,18 @@ public unsafe class ExecutorMain
 		Shaders.DefShader.SetDefaults();
 
 		Shaders.DefShader.Use();
+		GL.BindVertexArray(VAO);
 
 		Rainbow.Use(TextureUnit.Texture0);
 		Andrew.Use(TextureUnit.Texture1);
+
+		GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
+		for (int i = 0; i < 6; i++)
+			GL.BufferSubData(
+				BufferTarget.ArrayBuffer,
+				(IntPtr)(4 * sizeof(float) + i * 8 * sizeof(float)),
+				sizeof(float) * 4,
+				new float[4] { Palette.Disco10.R /255, Palette.Disco10.G /255, Palette.Disco10.B /255, 1f });
 
 		mat4 ident = mat4.Identity;
 		ident *= Camera.GetTranslation();
@@ -126,7 +138,15 @@ public unsafe class ExecutorMain
 
 		Shaders.DefShader.Texture(TextureUnit.Texture1);
 		Shaders.DefShader.Matrix(ident);
+		GL.EnableVertexAttribArray(0);
+		GL.EnableVertexAttribArray(1);
+		GL.EnableVertexAttribArray(2);
 		GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
+		GL.DisableVertexAttribArray(0);
+		GL.DisableVertexAttribArray(1);
+		GL.DisableVertexAttribArray(2);
+
+		//Draw.TextureDrawer.Draw(Andrew, default, new(200, 200), default, vec2.One, Palette.White, Palette.White, Palette.White, Palette.White, Camera);
 
 		window.Context.SwapBuffers();
 	}

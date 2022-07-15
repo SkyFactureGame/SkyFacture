@@ -12,19 +12,19 @@ public class DefaultShader : Shader
 		: base(File.ReadAllText("GameContent/Shaders/default.vert")
 			, File.ReadAllText("GameContent/Shaders/default.frag"))
 	{
-		const int stride = (4 * sizeof(float)) + (sizeof(int) * 1);
+		const int stride = (8 * sizeof(float));
 
 		// Position
 		GL.VertexAttribPointer(0, 2, VertexAttribPointerType.Float, false, stride, IntPtr.Zero);
-		GL.EnableVertexAttribArray(0);
+		//GL.EnableVertexAttribArray(0);
 
 		// Tex-position
 		GL.VertexAttribPointer(1, 2, VertexAttribPointerType.Float, false, stride, 2 * sizeof(float));
-		GL.EnableVertexAttribArray(1);
+		//GL.EnableVertexAttribArray(1);
 
 		// Color :|
-		GL.VertexAttribPointer(2, 1, VertexAttribPointerType.Int, false, stride, 4 * sizeof(float));
-		GL.EnableVertexAttribArray(2);
+		GL.VertexAttribPointer(2, 4, VertexAttribPointerType.Float, false, stride, 4 * sizeof(float));
+		//GL.EnableVertexAttribArray(2);
 
 		this.matrix = GL.GetUniformLocation(Handle, "matrix");
 		this.tex = GL.GetUniformLocation(Handle, "tex");
