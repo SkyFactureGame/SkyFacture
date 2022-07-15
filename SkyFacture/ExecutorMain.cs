@@ -6,6 +6,7 @@ using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkyFacture.Drawing;
 using SkyFacture.Drawing.Shading;
 using SkyFacture.Drawing.Sprites;
+using SkyFacture.Unical;
 using System;
 using System.IO;
 
@@ -42,6 +43,7 @@ public unsafe class ExecutorMain
 			scene.Init();
 		}
 	}
+	public static ResourceLoader ResourceLoader { get; protected internal set; } 
 	public static GameVersion Version => new(V: 0, r: 1);
 	public static SystemType SystemType { get; protected internal set; }
 	public const string GameName = "Sky Facture";
@@ -64,12 +66,21 @@ public unsafe class ExecutorMain
 	private static int VBO, VAO;
 	public static readonly float[] Vert = new float[]
 	{
-		-0.5f, -0.5f, 0, 0,
-		 0.5f, -0.5f, 1, 0,
-		 0.5f,  0.5f, 1, 1,
-		 0.5f,  0.5f, 1, 1,
-		-0.5f,  0.5f, 0, 1,
-		-0.5f, -0.5f, 0, 0,
+		-0.5f, -0.5f, 0, 0, 1,
+		 0.5f, -0.5f, 1, 0, 1,
+		 0.5f,  0.5f, 1, 1, 0,
+		 0.5f,  0.5f, 1, 1, 1,
+		-0.5f,  0.5f, 0, 1, 1,
+		-0.5f, -0.5f, 0, 0, 1
+	};
+	public static readonly byte[] VertColor = new byte[]
+	{
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 255, 255, 255,
+		255, 255, 255, 255
 	};
 	protected internal static void Load()
 	{
@@ -88,6 +99,7 @@ public unsafe class ExecutorMain
 		VBO = GL.GenBuffer();
 		GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
 		GL.BufferData(BufferTarget.ArrayBuffer, Vert.Length * sizeof(float), Vert, BufferUsageHint.StaticDraw);
+		GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)(sizeof(float) * 1), sizeof(byte), VertColor);
 
 		Camera = new();
 		Camera.Select();
@@ -97,23 +109,22 @@ public unsafe class ExecutorMain
 		Time.RenderDelta = args.Time;
 		Time.RenderTime += args.Time;
 
-		GL.ClearColor(Palette.Disco10);
-		GL.Clear(ClearBufferMask.ColorBufferBit | ClearBufferMask.DepthBufferBit);
+		GL.ClearColor(Palette.Black);
+		GL.Clear(ClearBufferMask.ColorBufferBit);
 
 		Shaders.DefShader.SetDefaults();
 
 		Shaders.DefShader.Use();
 
 		Rainbow.Use(TextureUnit.Texture0);
+		Andrew.Use(TextureUnit.Texture1);
 
 		mat4 ident = mat4.Identity;
 		ident *= Camera.GetTranslation();
-		ident *= mat4.CreateScale(50f, 50f, 1f);
+		ident *= mat4.CreateScale(225f, 225f, 1f);
 		ident *= Camera.GetView();
 
-		_ = Atlas.Transperent;
-
-		Shaders.DefShader.Texture(TextureUnit.Texture0);
+		Shaders.DefShader.Texture(TextureUnit.Texture1);
 		Shaders.DefShader.Matrix(ident);
 		GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
 
