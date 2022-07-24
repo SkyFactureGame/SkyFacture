@@ -40,7 +40,15 @@ public static class Palette
 				return Color.FromArgb(255, 255, 0, descending);
 		}
 	}
-
+	public static Color Lerp(Color left, Color right, float progress)
+	{
+		int r, g, b, a;
+		r = MathA.Lerp(left.R, right.R, progress);
+		g = MathA.Lerp(left.G, right.G, progress);
+		b = MathA.Lerp(left.B, right.B, progress);
+		a = MathA.Lerp(left.A, right.A, progress);
+		return Color.FromArgb(a, r, g, b);
+	}
 	static Palette()
 	{
 		Red = Color.FromArgb(255, 0, 0);

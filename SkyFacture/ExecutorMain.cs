@@ -4,6 +4,7 @@ using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkyFacture.Drawing;
+using SkyFacture.Drawing.Buffers;
 using SkyFacture.Drawing.Shading;
 using SkyFacture.Drawing.Sprites;
 using SkyFacture.Unical;
@@ -11,7 +12,6 @@ using System;
 using System.IO;
 
 namespace SkyFacture;
-
 
 public unsafe class ExecutorMain
 {
@@ -50,7 +50,6 @@ public unsafe class ExecutorMain
 	public const string GameName = "Sky Facture";
 	public const string Package = "NiTiS.Dev.SkyFacture";
 	public const string PackageLowerCase = "nitis.dev.skyfacture";
-#pragma warning restore CS8618
 	protected internal static void Launch()
 	{
 		window.Load += Load;
@@ -65,88 +64,73 @@ public unsafe class ExecutorMain
 	private static Camera Camera;
 	private static Texture2D Andrew, Rainbow;
 	private static Region2D White;
-	private static int VBO, VAO;
+	private static Buffer<float> VBO;
+	private static VertexArray VAO;
+#pragma warning restore CS8618
 	public static readonly float[] Vert = new float[]
 	{
-		-0.505f, -0.505f, 0, 0,    0, 0, 0, 1,
-		 0.505f, -0.505f, 1, 0,    0, 0, 0, 1,
-		 0.505f,  0.505f, 1, 1,    0, 0, 0, 1,
-		 0.505f,  0.505f, 1, 1,    0, 0, 0, 1,
-		-0.505f,  0.505f, 0, 1,    0, 0, 0, 1,
-		-0.505f, -0.505f, 0, 0,    0, 0, 0, 1,
-	};
-	public static readonly float[] VertColor = new float[]
-	{
-		1, 1, 1, 1,
-		1, 0, 1, 1,
-		1, 1, 1, 1,
-		1, 1, 0, 1,
-		1, 0, 1, 1,
-		1, 1, 1, 1
+		-0.5f, -0.5f, 0, 0,
+		 0.5f, -0.5f, 1, 0,
+		 0.5f,  0.5f, 1, 1,
+		 0.5f,  0.5f, 1, 1,
+		-0.5f,  0.5f, 0, 1,
+		-0.5f, -0.5f, 0, 0,
 	};
 	protected internal static void Load()
 	{
 		Console.WriteLine("Max Texture Binding: " + GL.GetInteger(GetPName.MaxTextureImageUnits));
-
+		Console.WriteLine("OpenGL Version: " + GL.GetInteger(GetPName.MajorVersion) + "." + GL.GetInteger(GetPName.MinorVersion));
 		Blend.Enable();
-
 		Atlas.LoadInternalRegions();
-
 		Andrew = new(File.OpenRead("GameContent/Textures/andrew.png"));
 		Rainbow = new(File.OpenRead("GameContent/Textures/rainbow.png"));
-
 		White = Atlas.Region("white")!;
 
-		VAO = GL.GenVertexArray();
-		GL.BindVertexArray(VAO);
 
-		VBO = GL.GenBuffer();
-		GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-		GL.BufferData(BufferTarget.ArrayBuffer, Vert.Length * sizeof(float), Vert, BufferUsageHint.StreamDraw);
+		VAO = new(Shaders.DefShader);
+		
+		VBO = new(BufferTarget.ArrayBuffer, sizeof(float) * 4);
+		VBO
+			.Bind()
+			.Init(Vert.Length * sizeof(float), 6, Vert);
+
+		VAO.BindAllAttributes(VBO);
 
 		Camera = new();
 		Camera.Select();
+		Camera.Position -= new vec3(0, 0, 1f);
+		GL.Hint(HintTarget.PolygonSmoothHint, HintMode.Nicest);
 	}
 	protected internal static void GraphicUpdate(FrameEventArgs args)
 	{
 		Time.RenderDelta = args.Time;
 		Time.RenderTime += args.Time;
 
-		GL.ClearColor(Palette.Black);
+		GL.ClearColor(Palette.Disco10);
 		GL.Clear(ClearBufferMask.ColorBufferBit);
 
 		Shaders.DefShader.SetDefaults();
 
-		Shaders.DefShader.Use();
-		GL.BindVertexArray(VAO);
+		VAO.Bind();
 
 		Rainbow.Use(TextureUnit.Texture0);
 		Andrew.Use(TextureUnit.Texture1);
 
-		GL.BindBuffer(BufferTarget.ArrayBuffer, VBO);
-		for (int i = 0; i < 6; i++)
-			GL.BufferSubData(
-				BufferTarget.ArrayBuffer,
-				(IntPtr)(4 * sizeof(float) + i * 8 * sizeof(float)),
-				sizeof(float) * 4,
-				new float[4] { Palette.Disco10.R /255, Palette.Disco10.G /255, Palette.Disco10.B /255, 1f });
+		GL.BindBuffer(BufferTarget.ArrayBuffer, VBO.handle);
+
+		Shaders.DefShader.Color(Palette.Disco10.Move(180f));
 
 		mat4 ident = mat4.Identity;
 		ident *= Camera.GetTranslation();
 		ident *= mat4.CreateScale(225f, 225f, 1f);
 		ident *= Camera.GetView();
 
+
 		Shaders.DefShader.Texture(TextureUnit.Texture1);
 		Shaders.DefShader.Matrix(ident);
-		GL.EnableVertexAttribArray(0);
-		GL.EnableVertexAttribArray(1);
-		GL.EnableVertexAttribArray(2);
-		GL.DrawArrays(PrimitiveType.Triangles, 0, 6);
-		GL.DisableVertexAttribArray(0);
-		GL.DisableVertexAttribArray(1);
-		GL.DisableVertexAttribArray(2);
-
-		//Draw.TextureDrawer.Draw(Andrew, default, new(200, 200), default, vec2.One, Palette.White, Palette.White, Palette.White, Palette.White, Camera);
+		VBO.Bind();
+		VAO.Bind();
+		VAO.Draw(PrimitiveType.Triangles, 0, 6);
 
 		window.Context.SwapBuffers();
 	}

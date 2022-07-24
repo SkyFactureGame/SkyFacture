@@ -4,14 +4,13 @@ using SixLabors.ImageSharp.PixelFormats;
 using System.IO;
 
 namespace SkyFacture.Drawing.Sprites;
-public class Texture2D : IGLObj
+public class Texture2D : GLObj
 {
-	private readonly int handle;
 	public readonly int Width, Height;
 	public int Handle => this.handle;
 	public Texture2D(Stream stream, bool blending = true) : this(Image.Load<Rgba32>(stream), blending) { }
 	public Texture2D(byte[] bytes, bool blending = true) : this(Image.Load<Rgba32>(bytes), blending) { }
-	public Texture2D(Image<Rgba32> image, bool blending = true)
+	public Texture2D(Image<Rgba32> image, bool blending = true) : base(GL.GenTexture())
 	{
 		byte[] pixels = new byte[4 * image.Width * image.Height];
 		uint pixelN = 0;
@@ -25,8 +24,6 @@ public class Texture2D : IGLObj
 				pixels[pixelN * 4 + 3] = pixel.A;
 				pixelN++;
 			}
-
-		this.handle = GL.GenTexture();
 
 		this.Width = image.Width;
 		this.Height = image.Height;

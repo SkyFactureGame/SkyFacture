@@ -6,6 +6,7 @@ global using vec2 = OpenTK.Mathematics.Vector2;
 global using vec2i = OpenTK.Mathematics.Vector2i;
 global using vec3 = OpenTK.Mathematics.Vector3;
 global using vec4 = OpenTK.Mathematics.Vector4;
+global using FBuff = SkyFacture.Drawing.Buffers.Buffer<float>;
 
 public static class NumberExtensions
 {
