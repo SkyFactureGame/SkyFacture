@@ -20,12 +20,15 @@
 		<EmbeddedResource Include="GameContent\**\*">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</EmbeddedResource>
+		<Compile Remove="Net\**" />
+		<EmbeddedResource Remove="Net\**" />
+		<None Remove="Net\**" />
 		
 		<EmbeddedResource Remove="GameContent\Textures\icon.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Net\" />
+	  <None Remove="GameContent\Textures\tt_.alias" />
 	</ItemGroup>
 
 </Project>

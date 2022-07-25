@@ -8,16 +8,6 @@ public class Buffer<T> : GLObj where T : unmanaged
 	public readonly BufferTarget target;
 	private readonly int elementSize;
 	private int elementCount, size;
-	public T[] Content
-	{
-		get
-		{
-			T[] items = new T[elementCount];
-			GL.BindBuffer(BufferTarget.ArrayBuffer, handle);
-			GL.GetBufferSubData(BufferTarget.ArrayBuffer, IntPtr.Zero, (IntPtr)(elementSize * elementCount), items);
-			return items;
-		}
-	}
 	public Buffer(BufferTarget target, int elementSize) : base(GL.GenBuffer())
 	{
 		this.target = target;

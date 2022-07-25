@@ -2,7 +2,6 @@
 
 using OpenTK.Graphics.OpenGL;
 using SkyFacture.Drawing.Buffers;
-using SkyFacture.Geometry;
 
 namespace SkyFacture.Drawing.Sprites;
 public class Region2D
@@ -15,20 +14,12 @@ public class Region2D
 		UV = new(BufferTarget.ArrayBuffer, sizeof(float) * 2);
 		UV.Init(12 * sizeof(float), 6, new float[12]
 		{
-			/*
 			lowLeftPoint.X, lowLeftPoint.Y,
 			rightTopPoint.X, lowLeftPoint.Y,
 			rightTopPoint.X, rightTopPoint.Y,
 			rightTopPoint.X, rightTopPoint.Y,
 			lowLeftPoint.X, rightTopPoint.Y,
 			lowLeftPoint.X, lowLeftPoint.Y,
-			*/
-			0, 0,
-			1, 0,
-			1, 1,
-			1, 1,
-			0, 1,
-			0, 0,
 		});
 	}
 	public void Use(TextureUnit unit = TextureUnit.Texture0)

@@ -1,0 +1,8 @@
+﻿blending: false
+textures:
+  - name: sand
+    pos: 0,0
+    size: 32,32
+  - name: aqw
+    pos: 32,0
+    size: 32,32
