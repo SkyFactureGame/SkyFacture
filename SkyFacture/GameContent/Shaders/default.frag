@@ -1,6 +1,6 @@
 ﻿#version 330 core
 
-in vec2 fTexPos;
+in vec2 fUV;
 in vec4 fColor;
 
 out vec4 FragColor;
@@ -20,11 +20,10 @@ vec4 colorize(in vec4 grayscale, in vec4 color)
 
 void main()
 {
-    vec4 textureColor = texture(tex, fTexPos);
+    vec4 textureColor = texture(tex, fUV);
 
     if (fColor.xyz == vec3(1, 1, 1)) //White
     {
-        textureColor.a = fColor.a;
         FragColor = textureColor;
     }
     else
@@ -32,4 +31,5 @@ void main()
         vec4 gs = toGrayscale(textureColor);
         FragColor = colorize(gs, fColor);
     }
+    FragColor.a = textureColor.a;
 }

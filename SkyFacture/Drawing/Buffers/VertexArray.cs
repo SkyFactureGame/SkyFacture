@@ -3,6 +3,8 @@ using SkyFacture.Drawing.Shading;
 using System;
 
 namespace SkyFacture.Drawing.Buffers;
+
+//TODO: Move Attributes сюда
 public class VertexArray : GLObj, IDisposable
 {
 	private readonly Shader shader;
@@ -10,22 +12,8 @@ public class VertexArray : GLObj, IDisposable
 	{
 		this.shader = shader;
 		Bind();
-		foreach (Shading.Attribute attr in shader.VertexAttributes())
-		{
-			GL.EnableVertexAttribArray(attr.attrHandle);
-			GL.VertexAttribPointer(attr.attrHandle, attr.size, attr.type, attr.normalized, attr.stride, attr.offset);
-		}
 	}
-	public void BindAllAttributes<T>(Buffer<T> buff) where T : unmanaged
-	{
-		buff.Bind();
-		foreach (Shading.Attribute attr in shader.VertexAttributes())
-		{
-			GL.EnableVertexAttribArray(attr.attrHandle);
-			GL.VertexAttribPointer(attr.attrHandle, attr.size, attr.type, attr.normalized, attr.stride, attr.offset);
-		}
-	}
-	public void BindAttribute<T>(Shading.Attribute attr, Buffer<T> buff) where T : unmanaged
+	public void BindAttribute<T>(Attribute attr, Buffer<T> buff) where T : unmanaged
 	{
 		buff.Bind();
 		GL.EnableVertexAttribArray(attr.attrHandle);
@@ -38,10 +26,6 @@ public class VertexArray : GLObj, IDisposable
 	}
 	public void Dispose()
 	{
-		foreach (Shading.Attribute attr in shader.VertexAttributes())
-		{
-			GL.DisableVertexAttribArray(attr.attrHandle);
-		}
 		GL.DeleteVertexArray(handle);
 	}
 	~VertexArray()

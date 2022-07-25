@@ -15,7 +15,7 @@ public readonly struct Quad : IEquatable<Quad>
 	public readonly vec2 RightTop => new(this.rightX, this.topY);
 	public readonly vec2 Center => new((this.leftX + this.rightX) / 2, (this.bottomY + this.topY) / 2);
 	public readonly float Width => this.rightX - this.leftX;
-	public readonly float Hiegth => this.topY - this.bottomY;
+	public readonly float Heigth => this.topY - this.bottomY;
 	public Quad(float dx, float dy, float tx, float ty)
 	{
 		this.leftX = dx;

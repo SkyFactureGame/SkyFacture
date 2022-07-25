@@ -1,5 +1,6 @@
 ﻿
 using OpenTK.Graphics.OpenGL;
+using OpenTK.Mathematics;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
@@ -10,6 +11,7 @@ using SkyFacture.Drawing.Sprites;
 using SkyFacture.Unical;
 using System;
 using System.IO;
+using Attribute = SkyFacture.Drawing.Buffers.Attribute;
 
 namespace SkyFacture;
 
@@ -24,11 +26,11 @@ public unsafe class ExecutorMain
 		},
 		new()
 		{
-			API = OpenTK.Windowing.Common.ContextAPI.OpenGL,
+			API = ContextAPI.OpenGL,
 			APIVersion = new(3, 3),
 			Size = new(640, 320),
 			NumberOfSamples = 2,
-			Title = GameName,
+			Title = GameName
 		}
 		);
 #pragma warning disable CS8618
@@ -63,8 +65,8 @@ public unsafe class ExecutorMain
 	}
 	private static Camera Camera;
 	private static Texture2D Andrew, Rainbow;
-	private static Region2D White;
-	private static Buffer<float> VBO;
+	private static Region2D White, Black;
+	private static Buffer<float> VBO, VBO_Pos, VBO_UV;
 	private static VertexArray VAO;
 #pragma warning restore CS8618
 	public static readonly float[] Vert = new float[]
@@ -76,6 +78,24 @@ public unsafe class ExecutorMain
 		-0.5f,  0.5f, 0, 1,
 		-0.5f, -0.5f, 0, 0,
 	};
+	public static readonly float[] Pos = new float[]
+	{
+		-0.5f, -0.5f,
+		 0.5f, -0.5f,
+		 0.5f,  0.5f,
+		 0.5f,  0.5f,
+		-0.5f,  0.5f,
+		-0.5f, -0.5f,
+	};
+	public static readonly float[] UV = new float[]
+	{
+		0, 0,
+		1, 0,
+		1, 1,
+		1, 1,
+		0, 1,
+		0, 0,
+	};
 	protected internal static void Load()
 	{
 		Console.WriteLine("Max Texture Binding: " + GL.GetInteger(GetPName.MaxTextureImageUnits));
@@ -85,16 +105,28 @@ public unsafe class ExecutorMain
 		Andrew = new(File.OpenRead("GameContent/Textures/andrew.png"));
 		Rainbow = new(File.OpenRead("GameContent/Textures/rainbow.png"));
 		White = Atlas.Region("white")!;
-
+		Black = Atlas.Region("black")!;
 
 		VAO = new(Shaders.DefShader);
-		
+
 		VBO = new(BufferTarget.ArrayBuffer, sizeof(float) * 4);
 		VBO
 			.Bind()
 			.Init(Vert.Length * sizeof(float), 6, Vert);
 
-		VAO.BindAllAttributes(VBO);
+		VBO_Pos = new(BufferTarget.ArrayBuffer, sizeof(float) * 2);
+		VBO_Pos.Bind();
+		VBO_Pos.Init(Pos.Length * sizeof(float), 6, Pos);
+		VBO_UV = new(BufferTarget.ArrayBuffer, sizeof(float) * 2);
+		VBO_UV.Bind();
+		VBO_UV.Init(UV.Length * sizeof(float), 6, UV);
+
+		//1 - buffer
+		//VAO.BindAttribute(DefaultShader.vec2_Position, VBO);
+		//VAO.BindAttribute(DefaultShader.vec2_UV, VBO);
+		//2 - buffers
+		VAO.BindAttribute(VBO_Pos.CreateAttribute(0, VertexAttribPointerType.Float), VBO_Pos);
+		VAO.BindAttribute(DefaultShader.vec2_UV, VBO_UV);
 
 		Camera = new();
 		Camera.Select();
@@ -115,22 +147,22 @@ public unsafe class ExecutorMain
 
 		Rainbow.Use(TextureUnit.Texture0);
 		Andrew.Use(TextureUnit.Texture1);
-
-		GL.BindBuffer(BufferTarget.ArrayBuffer, VBO.handle);
-
-		Shaders.DefShader.Color(Palette.Disco10.Move(180f));
-
+		White.Use(TextureUnit.Texture2);
+		
 		mat4 ident = mat4.Identity;
 		ident *= Camera.GetTranslation();
-		ident *= mat4.CreateScale(225f, 225f, 1f);
+		ident *= mat4.CreateScale(150f, 150f, 1f);
 		ident *= Camera.GetView();
 
-
+		Draw.Color(Palette.Disco10.Invert());
 		Shaders.DefShader.Texture(TextureUnit.Texture1);
 		Shaders.DefShader.Matrix(ident);
-		VBO.Bind();
-		VAO.Bind();
+		
 		VAO.Draw(PrimitiveType.Triangles, 0, 6);
+
+		Draw.Color(Palette.Disco5);
+		Draw.Texture.Region(White, new((float)MathHelper.DegreesToRadians(MathA.Range(Time.RenderTime * 12, 360.0)), 0f, 0f), new(1f, 0f), vec2.One, Camera);
+		Draw.Texture.Region(Black, new((float)MathHelper.DegreesToRadians(MathA.Range(-Time.RenderTime * 12, 360.0)), 0f, 0f), new(-1f, 0f), vec2.One, Camera);
 
 		window.Context.SwapBuffers();
 	}

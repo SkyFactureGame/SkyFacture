@@ -12,5 +12,5 @@ public class Camera
 	public mat4 GetTranslation()
 		=> mat4.CreateTranslation(Position);
 	public mat4 GetView(float sizeX, float sizeY)
-		=> mat4.CreateOrthographic(sizeX, sizeY, -1f, 10000f);
+		=> mat4.CreateOrthographic(sizeX, sizeY, -1000f, 10000f);
 }

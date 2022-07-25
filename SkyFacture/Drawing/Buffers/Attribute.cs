@@ -1,6 +1,6 @@
 ﻿using OpenTK.Graphics.OpenGL;
 
-namespace SkyFacture.Drawing.Shading;
+namespace SkyFacture.Drawing.Buffers;
 
 public readonly struct Attribute
 {

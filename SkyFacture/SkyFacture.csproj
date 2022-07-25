@@ -18,10 +18,10 @@
 
 	<ItemGroup>
 		<EmbeddedResource Include="GameContent\**\*">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</EmbeddedResource>
-	  <None Update="GameContent\**\*">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+		
+		<EmbeddedResource Remove="GameContent\Textures\icon.ico" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -5,12 +5,9 @@ namespace SkyFacture.Drawing.Shading;
 
 public class Shader : GLObj
 {
-	protected readonly Attribute[] attributes; 
 	public virtual void SetDefaults() { }
-	public Shader(string vertexShader, string fragmentShader) : this(vertexShader, fragmentShader, Array.Empty<Attribute>()) { }
-	public Shader(string vertexShader, string fragmentShader, Attribute[] attributes) : base(GL.CreateProgram())
+	public Shader(string vertexShader, string fragmentShader) : base(GL.CreateProgram())
 	{
-		this.attributes = attributes;
 		int vert, frag;
 
 		vert = GL.CreateShader(ShaderType.VertexShader);
@@ -44,8 +41,6 @@ public class Shader : GLObj
 		GL.DeleteShader(vert);
 		GL.DeleteShader(frag);
 	}
-	public virtual Attribute[] VertexAttributes()
-		=> attributes;
 	protected int UniformPosition(string uniformName)
 		=> GL.GetUniformLocation(handle, uniformName);
 	public void Bind()
@@ -57,4 +52,6 @@ public class Shader : GLObj
 	}
 	public virtual void Dispose()
 		=> GL.DeleteProgram(this.handle);
+	~Shader()
+		=> Dispose();
 }

@@ -34,7 +34,7 @@ public class Texture2D : GLObj
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.MirroredRepeat);
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.MirroredRepeat);
 
-		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)(blending ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)(blending ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
 
 		GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
@@ -42,6 +42,11 @@ public class Texture2D : GLObj
 	public void Use(TextureUnit unit = TextureUnit.Texture0)
 	{
 		GL.ActiveTexture(unit);
+		GL.BindTexture(TextureTarget.Texture2D, this.handle);
+	}
+	public void Use(int unit)
+	{
+		GL.ActiveTexture(TextureUnit.Texture0 + unit);
 		GL.BindTexture(TextureTarget.Texture2D, this.handle);
 	}
 	public void Bind()

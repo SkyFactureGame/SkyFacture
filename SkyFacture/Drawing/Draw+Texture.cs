@@ -1,9 +1,13 @@
-﻿using SkyFacture.Drawing.Buffers;
+﻿using OpenTK.Graphics.OpenGL;
+using SkyFacture.Drawing.Buffers;
 using SkyFacture.Drawing.Shading;
+using SkyFacture.Drawing.Sprites;
+using SkyFacture.Geometry;
 
 namespace SkyFacture.Drawing;
 public static partial class Draw
 {
+	public const float TextureUnitSize = 150f;
 	public static class Texture
 	{
 		private static readonly VertexArray VAO;
@@ -11,7 +15,35 @@ public static partial class Draw
 		static Texture()
 		{
 			VAO = new(Shaders.DefShader);
-			VBO = new(OpenTK.Graphics.OpenGL.BufferTarget.ArrayBuffer, sizeof(float) * 4);
+			VBO = new(BufferTarget.ArrayBuffer, sizeof(float) * 2);
+			VBO.Init(12 * sizeof(float), 6, new float[12]
+			{
+				-0.5f, -0.5f,
+				 0.5f, -0.5f,
+				 0.5f,  0.5f,
+				 0.5f,  0.5f,
+				-0.5f,  0.5f,
+				-0.5f, -0.5f,
+			}, BufferUsageHint.StaticDraw);
+			VAO.BindAttribute(DefaultShader.vec2_Position, VBO);
+		}
+		public static void Region(Region2D region, quat rotation, vec2 position, vec2 size, Camera watcher, bool ui = false)
+		{
+			VAO.Bind();
+			VAO.BindAttribute(DefaultShader.vec2_UV, region.UV);
+			region.Use(TextureUnit.Texture6);
+
+			mat4 ident = mat4.Identity;
+			ident *= mat4.CreateScale(TextureUnitSize * size.X, TextureUnitSize * size.Y, 1f);
+			ident *= mat4.CreateFromQuaternion(rotation);
+			ident *= mat4.CreateTranslation(new vec3(position.X * TextureUnitSize, position.Y * TextureUnitSize, 0));
+			if (!ui) ident *= watcher.GetTranslation();
+			ident *= watcher.GetView();
+
+			Shaders.DefShader.Texture(TextureUnit.Texture6);
+			Shaders.DefShader.Matrix(ident);
+
+			VAO.Draw(PrimitiveType.Triangles, 0, 6);
 		}
 	}
 }
