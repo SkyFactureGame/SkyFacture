@@ -4,14 +4,13 @@ using SixLabors.ImageSharp.PixelFormats;
 using System.IO;
 
 namespace SkyFacture.Drawing.Sprites;
-public class Texture2D : IGLObj
+public class Texture2D : GLObj
 {
-	private readonly int handle;
 	public readonly int Width, Height;
 	public int Handle => this.handle;
 	public Texture2D(Stream stream, bool blending = true) : this(Image.Load<Rgba32>(stream), blending) { }
 	public Texture2D(byte[] bytes, bool blending = true) : this(Image.Load<Rgba32>(bytes), blending) { }
-	public Texture2D(Image<Rgba32> image, bool blending = true)
+	public Texture2D(Image<Rgba32> image, bool blending = true) : base(GL.GenTexture())
 	{
 		byte[] pixels = new byte[4 * image.Width * image.Height];
 		uint pixelN = 0;
@@ -26,8 +25,6 @@ public class Texture2D : IGLObj
 				pixelN++;
 			}
 
-		this.handle = GL.GenTexture();
-
 		this.Width = image.Width;
 		this.Height = image.Height;
 
@@ -37,7 +34,7 @@ public class Texture2D : IGLObj
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.MirroredRepeat);
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapT, (int)TextureWrapMode.MirroredRepeat);
 
-		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)TextureMinFilter.Linear);
+		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMinFilter, (int)(blending ? TextureMinFilter.Linear : TextureMinFilter.Nearest));
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureMagFilter, (int)(blending ? TextureMagFilter.Linear : TextureMagFilter.Nearest));
 
 		GL.GenerateMipmap(GenerateMipmapTarget.Texture2D);
@@ -45,6 +42,11 @@ public class Texture2D : IGLObj
 	public void Use(TextureUnit unit = TextureUnit.Texture0)
 	{
 		GL.ActiveTexture(unit);
+		GL.BindTexture(TextureTarget.Texture2D, this.handle);
+	}
+	public void Use(int unit)
+	{
+		GL.ActiveTexture(TextureUnit.Texture0 + unit);
 		GL.BindTexture(TextureTarget.Texture2D, this.handle);
 	}
 	public void Bind()

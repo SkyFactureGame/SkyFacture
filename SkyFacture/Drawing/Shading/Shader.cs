@@ -1,15 +1,12 @@
-﻿
-
-using OpenTK.Graphics.OpenGL;
+﻿using OpenTK.Graphics.OpenGL;
 using System;
 
 namespace SkyFacture.Drawing.Shading;
-public class Shader : IShader
+
+public class Shader : GLObj
 {
-	private readonly int handle;
-	public int Handle => this.handle;
 	public virtual void SetDefaults() { }
-	public Shader(string vertexShader, string fragmentShader)
+	public Shader(string vertexShader, string fragmentShader) : base(GL.CreateProgram())
 	{
 		int vert, frag;
 
@@ -31,7 +28,6 @@ public class Shader : IShader
 		if (!String.IsNullOrWhiteSpace(infoLog))
 			Console.WriteLine($"Error compiling vertex shader {infoLog}");
 
-		this.handle = GL.CreateProgram();
 		GL.AttachShader(this.handle, vert);
 		GL.AttachShader(this.handle, frag);
 		GL.LinkProgram(this.handle);
@@ -46,7 +42,7 @@ public class Shader : IShader
 		GL.DeleteShader(frag);
 	}
 	protected int UniformPosition(string uniformName)
-		=> GL.GetUniformLocation(Handle, uniformName);
+		=> GL.GetUniformLocation(handle, uniformName);
 	public void Bind()
 		=> GL.UseProgram(this.handle);
 	public virtual void Use()
@@ -56,4 +52,6 @@ public class Shader : IShader
 	}
 	public virtual void Dispose()
 		=> GL.DeleteProgram(this.handle);
+	~Shader()
+		=> Dispose();
 }

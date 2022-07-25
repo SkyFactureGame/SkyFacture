@@ -3,14 +3,16 @@
 namespace SkyFacture.Drawing;
 public class Camera
 {
-	public static Camera? Current { get; set; }
-	public vec3 Position { get; set; } = default;
-	public void Select()
-		=> Current = this;
-	public mat4 GetView()
-		=> GetView(Screen.Width, Screen.Height);
+	public vec3 Position { get; set; }
+	public Camera() : this(default) { }
+	public Camera(vec3 position)
+	{
+		Position = position;
+	}
+	public mat4 GetProjection()
+		=> GetProjection(Screen.Width, Screen.Height);
 	public mat4 GetTranslation()
 		=> mat4.CreateTranslation(Position);
-	public mat4 GetView(float sizeX, float sizeY)
-		=> mat4.CreateOrthographic(sizeX, sizeY, -1f, 10000f);
+	public mat4 GetProjection(float sizeX, float sizeY)
+		=> mat4.CreateOrthographic(sizeX, sizeY, -1000f, 10000f);
 }
