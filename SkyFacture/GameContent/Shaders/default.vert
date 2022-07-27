@@ -12,7 +12,7 @@ out vec4 fColor;
 
 void main()
 {
-	gl_Position = matrix * vec4(vPos.xy, zLayer, 1);
+	gl_Position = matrix * vec4(vPos.xy, zLayer, 1f);
 	fUV = vUV;
 	fColor = color;
 }

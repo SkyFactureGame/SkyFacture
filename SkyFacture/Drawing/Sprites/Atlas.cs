@@ -12,7 +12,20 @@ public static class Atlas
 	private static readonly Dictionary<string, Region2D> Regions = new(128);
 	public static Region2D? Region(string name)
 		=> Regions.GetValueOrDefault(name);
-	public static void LoadInternalRegions()
+	[System.Diagnostics.DebuggerStepThrough]
+	private static vec2i ParseVec2(string? str)
+	{
+		if (str is null) return default;
+
+		int splitIndex = str.IndexOf(',');
+		string left = str.Substring(0, splitIndex);
+		string right = str.Substring(splitIndex + 1);
+
+		return new(Int32.Parse(left), Int32.Parse(right));
+	}
+	private static vec2 FromPosToPoint(vec2i pos, int width, int height)
+		=> new(pos.X / (float)width, pos.Y / (float)height);
+	static Atlas()
 	{
 		Assembly asm = typeof(Atlas).Assembly;
 		string[] resourceFiles = asm.GetManifestResourceNames();
@@ -84,18 +97,10 @@ public static class Atlas
 				}
 			}
 		}
-	}
-	[System.Diagnostics.DebuggerStepThrough]
-	private static vec2i ParseVec2(string? str)
-	{
-		if (str is null) return default;
 
-		int splitIndex = str.IndexOf(',');
-		string left = str.Substring(0, splitIndex);
-		string right = str.Substring(splitIndex + 1);
-
-		return new(Int32.Parse(left), Int32.Parse(right));
+		White = Region("white")!;
+		Black = Region("black")!;
+		Debug = Region("debug")!;
+		Transperent = Region("transperent")!;
 	}
-	private static vec2 FromPosToPoint(vec2i pos, int width, int height)
-		=> new(pos.X / (float)width, pos.Y / (float)height);
 }

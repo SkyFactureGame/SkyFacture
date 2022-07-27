@@ -6,7 +6,7 @@ using SkyFacture.Drawing.Sprites;
 namespace SkyFacture.Drawing;
 public static partial class Draw
 {
-	public const float TextureUnitSize = 150f;
+	public const float TextureUnitSize = 50f;
 	public static class Texture
 	{
 		private static readonly VertexArray VAO;
@@ -40,6 +40,7 @@ public static partial class Draw
 			ident *= watcher.GetProjection();
 
 			Shaders.DefShader.Texture(TextureUnit.Texture6);
+			Shaders.DefShader.ZLayer(zLayer);
 			Shaders.DefShader.Matrix(ident);
 
 			VAO.Draw(PrimitiveType.Triangles, 0, 6);

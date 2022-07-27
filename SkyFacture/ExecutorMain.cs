@@ -21,25 +21,18 @@ public unsafe class ExecutorMain
 	private static readonly GameWindow window = new(
 		new()
 		{
-			RenderFrequency = 144,
-			UpdateFrequency = 60,
+			RenderFrequency = 480,
+			UpdateFrequency = 20,
 		},
 		new()
 		{
 			API = ContextAPI.OpenGL,
 			APIVersion = new(3, 3),
-			Size = new(640, 320),
-			NumberOfSamples = 2,
-			Title = GameName
+			Size = new(720, 480),
+			Title = SF.GameName
 		}
 		);
 #pragma warning disable CS8618
-	public static LoadingProgress LoadingProgress { get; private set; }
-	public static ResourceLoader ResourceLoader { get; protected internal set; } 
-	public static GameVersion Version => new(V: 0, r: 1);
-	public const string GameName = "Sky Facture";
-	public const string Package = "NiTiS.Dev.SkyFacture";
-	public const string PackageLowerCase = "nitis.dev.skyfacture";
 	protected internal static void Launch()
 	{
 		window.Load += Load;
@@ -52,16 +45,13 @@ public unsafe class ExecutorMain
 		window.Run();
 	}
 	private static Camera Cam;
-	private static Region2D White, Black, Sand;
+	private static Region2D Sand;
 #pragma warning restore CS8618
 	protected internal static void Load()
 	{
 		Console.WriteLine("Max Texture Binding: " + GL.GetInteger(GetPName.MaxTextureImageUnits));
 		Console.WriteLine("OpenGL Version: " + GL.GetInteger(GetPName.MajorVersion) + "." + GL.GetInteger(GetPName.MinorVersion));
 		Blend.Enable();
-		Atlas.LoadInternalRegions();
-		White = Atlas.Region("white")!;
-		Black = Atlas.Region("black")!;
 		Sand = Atlas.Region("sand")!;
 
 		Cam = new(new(0, 0, 1f));
@@ -75,12 +65,15 @@ public unsafe class ExecutorMain
 		GL.ClearColor(Palette.Disco10);
 		GL.Clear(ClearBufferMask.ColorBufferBit);
 
-		Draw.Color(Palette.Disco10);
-		Draw.Region(Black, new(-1f, 0f), Cam, true);
-		Draw.Region(White, new((float)MathHelper.DegreesToRadians(MathA.Range(-Time.RenderTime * 12, 360.0)), 0f, 0f), new(-1f, 0f), vec2.One, Cam, true);
-		Draw.Region(Sand, Cam, true);
 
-
+		const int size = 25;
+		for (int x = -size; x < size; x++)
+		{
+			for (int y = -size; y < size; y++)
+			{
+				Draw.Region(Sand, new(x, y), Cam, true);
+			}
+		}
 		window.Context.SwapBuffers();
 	}
 	protected internal static void Resize(ResizeEventArgs args)
@@ -109,6 +102,11 @@ public unsafe class ExecutorMain
 		if (args.Key == Keys.F11)
 		{
 			window.WindowState = WindowState.Fullscreen != window.WindowState ? WindowState.Fullscreen : WindowState.Normal;
+		}
+		else if (args.Key == Keys.F10)
+		{
+			window.VSync = window.VSync != VSyncMode.On ? VSyncMode.On : VSyncMode.Off;
+			Console.WriteLine(window.VSync);
 		}
 	}
 }

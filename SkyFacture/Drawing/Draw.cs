@@ -18,8 +18,6 @@ public static partial class Draw
 	}
 	public static void Alpha(float alpha)
 		=> Color(System.Drawing.Color.FromArgb((int)(alpha * 255), lastColor));
-
-
 	public static void Region(Region2D region, Camera watcher, bool ui = false)
 		=> Texture.Region(region, quat.Identity, default, vec2.One, watcher, ui);
 	public static void Region(Region2D region, vec2 pos, Camera watcher, bool ui = false)

@@ -5,7 +5,7 @@ using System.IO;
 namespace SkyFacture.Drawing.Shading;
 public class DefaultShader : Shader
 {
-	private readonly int matrix, tex, color;
+	private readonly int matrix, tex, color, zLayer;
 	public readonly int vPos, vUV;
 	public DefaultShader()
 		: base(File.ReadAllText("GameContent/Shaders/default.vert")
@@ -33,4 +33,6 @@ public class DefaultShader : Shader
 		=> GL.Uniform4(this.color, color);
 	public void Color(Color color)
 		=> GL.Uniform4(this.color, color);
+	public void ZLayer(float layer)
+		=> GL.Uniform1(this.zLayer, layer);
 }
