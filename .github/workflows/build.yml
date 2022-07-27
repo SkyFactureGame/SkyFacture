@@ -1,0 +1,21 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2
+          
+      - name: Build
+        run: |
+          cd SkyFacture/
+          dotnet build /m:1 -c Release -o ../.pack/
+          
+      - name: Artifact Pack
+        uses: actions/upload-artifact@v2
+        with:
+          path: .pack/*
