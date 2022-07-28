@@ -2,7 +2,7 @@
 
 namespace SkyFacture.Drawing.Buffers;
 
-public readonly struct Attribute
+public ref struct Attribute
 {
 	/// <summary>
 	/// Attribute position (layout position)

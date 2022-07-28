@@ -1,8 +1,11 @@
 ﻿using OpenTK.Graphics.OpenGL;
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace SkyFacture.Drawing.Buffers;
+
+[DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
 public class Buffer<T> : GLObj where T : unmanaged
 {
 	public readonly BufferTarget target;
@@ -16,7 +19,7 @@ public class Buffer<T> : GLObj where T : unmanaged
 	}
 	public Buffer<T> Bind()
 	{
-		GL.BindBuffer(target, handle);
+		GL.BindBuffer(target, Handle);
 		return this;
 	}
 	/// <summary>
@@ -37,4 +40,6 @@ public class Buffer<T> : GLObj where T : unmanaged
 	}
 	public unsafe Attribute CreateAttribute(int handle, VertexAttribPointerType type)
 		=> new(handle, type, size / elementCount / sizeof(T), false, elementSize, 0);
+	public override string ToString()
+		=> $"{{{target}<{typeof(T).Name}> [es:{elementSize} * ec:{elementCount}]}}";
 }

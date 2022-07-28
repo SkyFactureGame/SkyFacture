@@ -16,7 +16,7 @@ public unsafe class ExecutorMain
 		new()
 		{
 			RenderFrequency = 480,
-			UpdateFrequency = 20,
+			UpdateFrequency = 50,
 		},
 		new()
 		{
@@ -55,17 +55,22 @@ public unsafe class ExecutorMain
 	{
 		Time.RenderDelta = args.Time;
 		Time.RenderTime += args.Time;
+		window.Title = $"Sky Facture Draw+T:{Draw.Texture.SW.ElapsedMilliseconds}ms, ";
+		Draw.Texture.SW.Reset();
 
 		GL.ClearColor(Palette.Disco10);
 		GL.Clear(ClearBufferMask.ColorBufferBit);
 
 
-		const int size = 25;
+		const int size = 45;
 		for (int x = -size; x < size; x++)
 		{
 			for (int y = -size; y < size; y++)
 			{
-				Draw.Region(Sand, new(x, y), Cam, true);
+				if (x % 2 == 0 && y % 2 != 0 || y % 2 == 0 && x % 2 != 0)
+					Draw.Region(Sand, new(x, y), Cam);
+				else
+					Draw.Region(Atlas.Black, new(x, y), Cam);
 			}
 		}
 		window.Context.SwapBuffers();
@@ -75,6 +80,7 @@ public unsafe class ExecutorMain
 		GL.Viewport(0, 0, args.Width, args.Height);
 		Screen.Width = args.Width;
 		Screen.Height = args.Height;
+		Cam.UpdateProjMatrix(args.Width, args.Height);
 	}
 	protected internal static void Update(FrameEventArgs args)
 	{
@@ -94,7 +100,25 @@ public unsafe class ExecutorMain
 		{
 			Cam.Scale += (sizeP ? 1f : -1f) * (float)Time.UpdateDelta;
 		}
-		
+		float move = kstate.IsKeyDown(Keys.LeftShift) ? 6f : 2.1f;
+		vec3 moveDelta = default;
+		if (kstate.IsKeyDown(Keys.A))
+		{
+			moveDelta.X -= move * (float)Time.UpdateDelta;
+		}
+		if (kstate.IsKeyDown(Keys.D))
+		{
+			moveDelta.X += move * (float)Time.UpdateDelta;
+		}
+		if (kstate.IsKeyDown(Keys.W))
+		{
+			moveDelta.Y += move * (float)Time.UpdateDelta;
+		}
+		if (kstate.IsKeyDown(Keys.S))
+		{
+			moveDelta.Y -= move * (float)Time.UpdateDelta;
+		}
+		Cam.Position -= moveDelta;
 	}
 	protected internal static void KeyUp(KeyboardKeyEventArgs args)
 	{
@@ -104,7 +128,16 @@ public unsafe class ExecutorMain
 	{
 		if (args.Key == Keys.F11)
 		{
-			window.WindowState = WindowState.Fullscreen != window.WindowState ? WindowState.Fullscreen : WindowState.Normal;
+			if (window.WindowState != WindowState.Fullscreen)
+			{
+				window.WindowState = WindowState.Fullscreen;
+			}
+			else
+			{
+				window.WindowState = WindowState.Normal;
+				window.Size = window.MinimumSize ?? new(720, 480);
+				window.CenterWindow();
+			}
 		}
 		else if (args.Key == Keys.F10)
 		{

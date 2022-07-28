@@ -7,13 +7,18 @@ namespace SkyFacture.Drawing.Buffers;
 //TODO: Move Attributes сюда
 public class VertexArray : GLObj, IDisposable
 {
-	private readonly Shader shader;
-	public VertexArray(Shader shader) : base(GL.GenVertexArray())
+	private readonly AttributeList attributes;
+	public VertexArray(u8 attrSize) : base(GL.GenVertexArray())
 	{
-		this.shader = shader;
-		Bind();
+		BindValidator.Bind(BindTarget.VertexArray, this.Handle);
+		GL.BindVertexArray(Handle);
+		attributes = new(attrSize);
 	}
 	public void BindAttribute<T>(Attribute attr, Buffer<T> buff) where T : unmanaged
+	{
+		attributes.SafeBind(attr, buff);
+	}
+	public void HardBindAttribute<T>(Attribute attr, Buffer<T> buff) where T : unmanaged
 	{
 		buff.Bind();
 		GL.EnableVertexAttribArray(attr.attrHandle);
@@ -21,18 +26,17 @@ public class VertexArray : GLObj, IDisposable
 	}
 	public void Bind()
 	{
-		GL.BindVertexArray(handle);
-		shader.Bind();
+		if (BindValidator.ShoudBind(BindTarget.VertexArray, Handle))
+			GL.BindVertexArray(Handle);
 	}
 	public void Dispose()
 	{
-		GL.DeleteVertexArray(handle);
+		GL.DeleteVertexArray(Handle);
 	}
 	~VertexArray()
 		=> Dispose();
 	public void Draw(PrimitiveType type, int first, int count)
 	{
-		shader.Use();
 		GL.DrawArrays(type, first, count);
 	}
 }

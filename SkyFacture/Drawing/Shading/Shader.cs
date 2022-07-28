@@ -28,30 +28,28 @@ public class Shader : GLObj
 		if (!String.IsNullOrWhiteSpace(infoLog))
 			Console.WriteLine($"Error compiling vertex shader {infoLog}");
 
-		GL.AttachShader(this.handle, vert);
-		GL.AttachShader(this.handle, frag);
-		GL.LinkProgram(this.handle);
+		GL.AttachShader(this.Handle, vert);
+		GL.AttachShader(this.Handle, frag);
+		GL.LinkProgram(this.Handle);
 
-		GL.GetProgram(this.handle, GetProgramParameterName.LinkStatus, out int status);
+		GL.GetProgram(this.Handle, GetProgramParameterName.LinkStatus, out int status);
 		if (status == 0)
-			Console.WriteLine($"Error linking shader {GL.GetProgramInfoLog(this.handle)}");
+			Console.WriteLine($"Error linking shader {GL.GetProgramInfoLog(this.Handle)}");
 
-		GL.DetachShader(this.handle, vert);
-		GL.DetachShader(this.handle, frag);
+		GL.DetachShader(this.Handle, vert);
+		GL.DetachShader(this.Handle, frag);
 		GL.DeleteShader(vert);
 		GL.DeleteShader(frag);
 	}
 	protected int UniformPosition(string uniformName)
-		=> GL.GetUniformLocation(handle, uniformName);
+		=> GL.GetUniformLocation(Handle, uniformName);
 	public void Bind()
-		=> GL.UseProgram(this.handle);
-	public virtual void Use()
 	{
-		Bind();
-		Shaders.Current = this;
+		if (BindValidator.ShoudBind(BindTarget.Shader, Handle))
+			GL.UseProgram(this.Handle);
 	}
 	public virtual void Dispose()
-		=> GL.DeleteProgram(this.handle);
+		=> GL.DeleteProgram(this.Handle);
 	~Shader()
 		=> Dispose();
 }

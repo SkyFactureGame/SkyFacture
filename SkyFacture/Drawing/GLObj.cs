@@ -1,14 +1,13 @@
-﻿
-
-using System;
-
-namespace SkyFacture.Drawing;
+﻿namespace SkyFacture.Drawing;
 
 public abstract class GLObj
 {
-	public readonly int handle;
-	public GLObj(int handle)
+	public readonly i32 Handle;
+	public GLObj(i32 handle)
 	{
-		this.handle = handle;
+		Handle = handle;
+#if DEBUG
+		System.Console.WriteLine($"Named new {this.GetType().Name} with id {handle}");
+#endif
 	}
 }

@@ -11,12 +11,12 @@ public class DefaultShader : Shader
 		: base(File.ReadAllText("GameContent/Shaders/default.vert")
 			, File.ReadAllText("GameContent/Shaders/default.frag"))
 	{
-		this.matrix = GL.GetUniformLocation(handle, nameof(matrix));
-		this.tex = GL.GetUniformLocation(handle, nameof(tex));
-		this.color = GL.GetUniformLocation(handle, nameof(color));
+		this.matrix = GL.GetUniformLocation(Handle, nameof(matrix));
+		this.tex = GL.GetUniformLocation(Handle, nameof(tex));
+		this.color = GL.GetUniformLocation(Handle, nameof(color));
 
-		this.vPos = GL.GetAttribLocation(handle, nameof(vPos));
-		this.vUV = GL.GetAttribLocation(handle, nameof(vUV));
+		this.vPos = GL.GetAttribLocation(Handle, nameof(vPos));
+		this.vUV = GL.GetAttribLocation(Handle, nameof(vUV));
 	}
 	public override void SetDefaults()
 	{

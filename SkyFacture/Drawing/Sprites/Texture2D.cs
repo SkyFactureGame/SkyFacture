@@ -7,7 +7,6 @@ namespace SkyFacture.Drawing.Sprites;
 public class Texture2D : GLObj
 {
 	public readonly int Width, Height;
-	public int Handle => this.handle;
 	public Texture2D(Stream stream, bool blending = true) : this(Image.Load<Rgba32>(stream), blending) { }
 	public Texture2D(byte[] bytes, bool blending = true) : this(Image.Load<Rgba32>(bytes), blending) { }
 	public Texture2D(Image<Rgba32> image, bool blending = true) : base(GL.GenTexture())
@@ -28,7 +27,7 @@ public class Texture2D : GLObj
 		this.Width = image.Width;
 		this.Height = image.Height;
 
-		GL.BindTexture(TextureTarget.Texture2D, this.handle);
+		GL.BindTexture(TextureTarget.Texture2D, this.Handle);
 		GL.TexImage2D(TextureTarget.Texture2D, 0, PixelInternalFormat.Rgba, image.Width, image.Height, 0, PixelFormat.Rgba, PixelType.UnsignedByte, pixels);
 
 		GL.TexParameter(TextureTarget.Texture2D, TextureParameterName.TextureWrapS, (int)TextureWrapMode.MirroredRepeat);
@@ -41,16 +40,22 @@ public class Texture2D : GLObj
 	}
 	public void Use(TextureUnit unit = TextureUnit.Texture0)
 	{
-		GL.ActiveTexture(unit);
-		GL.BindTexture(TextureTarget.Texture2D, this.handle);
+		TextureBindValidator.ActivateUnit(unit);
+		if (BindValidator.ShoudBind(BindTarget.Texture, Handle))
+		{
+			GL.BindTexture(TextureTarget.Texture2D, Handle);
+		}
 	}
 	public void Use(int unit)
 	{
-		GL.ActiveTexture(TextureUnit.Texture0 + unit);
-		GL.BindTexture(TextureTarget.Texture2D, this.handle);
+		TextureBindValidator.ActivateUnit(TextureUnit.Texture0 + unit);
+		if (BindValidator.ShoudBind(BindTarget.Texture, Handle))
+		{
+			GL.BindTexture(TextureTarget.Texture2D, Handle);
+		}
 	}
 	public void Bind()
-		=> GL.BindTexture(TextureTarget.Texture2D, this.handle);
+		=> GL.BindTexture(TextureTarget.Texture2D, this.Handle);
 	public void Dispose()
-		=> GL.DeleteTexture(this.handle);
+		=> GL.DeleteTexture(this.Handle);
 }
