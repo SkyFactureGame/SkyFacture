@@ -4,6 +4,7 @@ namespace SkyFacture.Drawing;
 public class Camera
 {
 	public vec3 Position { get; set; }
+	public float Scale { get; set; } = 1f;
 	public Camera() : this(default) { }
 	public Camera(vec3 position)
 	{

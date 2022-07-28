@@ -6,7 +6,7 @@ using SkyFacture.Drawing.Sprites;
 namespace SkyFacture.Drawing;
 public static partial class Draw
 {
-	public const float TextureUnitSize = 50f;
+	public const float TextureUnitSize = 2f;
 	public static class Texture
 	{
 		private static readonly VertexArray VAO;
@@ -28,6 +28,27 @@ public static partial class Draw
 		}
 		public static void Region(Region2D region, quat rotation, vec2 position, vec2 size, Camera watcher, bool ui = false)
 		{
+			VAO.Bind();
+			VAO.BindAttribute(region.UV.CreateAttribute(Shaders.DefShader.vUV, VertexAttribPointerType.Float), region.UV);
+			region.Use(TextureUnit.Texture6);
+
+			mat4 ident = mat4.Identity;
+			if (!ui) ident *= watcher.GetTranslation();
+			ident *= mat4.CreateScale(TextureUnitSize * size.X, TextureUnitSize * size.Y, 1f);
+			ident *= mat4.CreateFromQuaternion(rotation);
+			ident *= mat4.CreateTranslation(new vec3(position.X * TextureUnitSize, position.Y * TextureUnitSize, 0));
+			ident *= mat4.CreateScale(watcher.Scale, watcher.Scale, 1f);
+			ident *= watcher.GetProjection();
+
+			Shaders.DefShader.Texture(TextureUnit.Texture6);
+			Shaders.DefShader.ZLayer(zLayer);
+			Shaders.DefShader.Matrix(ident);
+
+			VAO.Draw(PrimitiveType.Triangles, 0, 6);
+		}
+		public static void FastRegions(Region2D region, quat rotation, vec2 position, vec2 size, Camera watcher, bool ui = false)
+		{
+			throw new System.NotImplementedException();
 			VAO.Bind();
 			VAO.BindAttribute(region.UV.CreateAttribute(Shaders.DefShader.vUV, VertexAttribPointerType.Float), region.UV);
 			region.Use(TextureUnit.Texture6);

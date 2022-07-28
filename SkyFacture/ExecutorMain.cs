@@ -1,17 +1,11 @@
-﻿
-using OpenTK.Graphics.OpenGL;
-using OpenTK.Mathematics;
+﻿using OpenTK.Graphics.OpenGL;
 using OpenTK.Windowing.Common;
 using OpenTK.Windowing.Desktop;
 using OpenTK.Windowing.GraphicsLibraryFramework;
 using SkyFacture.Drawing;
-using SkyFacture.Drawing.Buffers;
 using SkyFacture.Drawing.Shading;
 using SkyFacture.Drawing.Sprites;
-using SkyFacture.Unical;
 using System;
-using System.IO;
-using Attribute = SkyFacture.Drawing.Buffers.Attribute;
 
 namespace SkyFacture;
 
@@ -92,6 +86,15 @@ public unsafe class ExecutorMain
 		{
 			return;
 		}
+		KeyboardState kstate = window.KeyboardState;
+		bool sizeP, sizeM;
+		sizeP = kstate.IsKeyDown(Keys.Equal);
+		sizeM = kstate.IsKeyDown(Keys.Minus);
+		if (sizeM && !sizeP || sizeP && !sizeM)
+		{
+			Cam.Scale += (sizeP ? 1f : -1f) * (float)Time.UpdateDelta;
+		}
+		
 	}
 	protected internal static void KeyUp(KeyboardKeyEventArgs args)
 	{
