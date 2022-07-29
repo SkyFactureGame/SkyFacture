@@ -2,6 +2,7 @@
 using SkyFacture.Drawing.Buffers;
 using SkyFacture.Drawing.Shading;
 using SkyFacture.Drawing.Sprites;
+using System;
 using System.Diagnostics;
 
 namespace SkyFacture.Drawing;
@@ -53,9 +54,14 @@ public static partial class Draw
 			VAO.Draw(PrimitiveType.Triangles, 0, 6);
 			SW.Stop();
 		}
-		public static void RegionSeq(Region2D region, quat rotation, vec2 position, vec2 size, Camera watcher, bool ui = false)
+		public static void RegionSeq(Region2D region, Func<bool> drawer, Camera watcher, bool ui = false)
 		{
 			SW.Start();
+			region.Use(TextureUnit.Texture4);
+			while (drawer())
+			{
+				VAO.Draw(PrimitiveType.Triangles, 0, 6);
+			}
 			SW.Stop();
 		}
 	}

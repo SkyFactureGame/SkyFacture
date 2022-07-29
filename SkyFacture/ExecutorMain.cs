@@ -61,8 +61,7 @@ public unsafe class ExecutorMain
 		GL.ClearColor(Palette.Disco10);
 		GL.Clear(ClearBufferMask.ColorBufferBit);
 
-
-		const int size = 45;
+		const int size = 10;
 		for (int x = -size; x < size; x++)
 		{
 			for (int y = -size; y < size; y++)
