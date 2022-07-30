@@ -7,15 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyFacture", "SkyFacture\Sk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyFacture.Windows", "SkyFacutre.Windows\SkyFacture.Windows.csproj", "{F3DB6504-F18A-45E0-9715-1391C073B5FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyFacture.Drawing", "SkyFacture.Drawing\SkyFacture.Drawing.csproj", "{4EDEDADD-58A0-4C1B-BD11-4E8DADEFB5E7}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyFacture.Content", "SkyFacture.Content\SkyFacture.Content.csproj", "{7AD86238-CBD9-43D4-9779-7F1A18B3E307}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{3EB31349-64C3-49BA-95D7-CCA4E5FCACCA}"
-	ProjectSection(SolutionItems) = preProject
-		usings.cs = usings.cs
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,14 +21,6 @@ Global
 		{F3DB6504-F18A-45E0-9715-1391C073B5FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3DB6504-F18A-45E0-9715-1391C073B5FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3DB6504-F18A-45E0-9715-1391C073B5FB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4EDEDADD-58A0-4C1B-BD11-4E8DADEFB5E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4EDEDADD-58A0-4C1B-BD11-4E8DADEFB5E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4EDEDADD-58A0-4C1B-BD11-4E8DADEFB5E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4EDEDADD-58A0-4C1B-BD11-4E8DADEFB5E7}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7AD86238-CBD9-43D4-9779-7F1A18B3E307}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7AD86238-CBD9-43D4-9779-7F1A18B3E307}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7AD86238-CBD9-43D4-9779-7F1A18B3E307}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7AD86238-CBD9-43D4-9779-7F1A18B3E307}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

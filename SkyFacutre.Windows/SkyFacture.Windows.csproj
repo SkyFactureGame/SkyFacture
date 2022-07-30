@@ -5,12 +5,22 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<EnablePreviewFeatures>true</EnablePreviewFeatures>
-		<StartupObject>SkyFacture.Windows.Program</StartupObject>
-		<AssemblyName></AssemblyName>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<ApplicationIcon>wicon.ico</ApplicationIcon>
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Content Include="wicon.png" />
+	</ItemGroup>
+	
+	<ItemGroup>
 		<ProjectReference Include="..\SkyFacture\SkyFacture.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="wicon.png">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 
 </Project>
