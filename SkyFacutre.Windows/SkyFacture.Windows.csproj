@@ -7,12 +7,7 @@
 		<EnablePreviewFeatures>true</EnablePreviewFeatures>
 		<StartupObject>SkyFacture.Windows.Program</StartupObject>
 		<AssemblyName></AssemblyName>
-		<ApplicationIcon>icon.ico</ApplicationIcon>
 	</PropertyGroup>
-
-	<ItemGroup>
-	  <Content Include="icon.ico" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\SkyFacture\SkyFacture.csproj" />

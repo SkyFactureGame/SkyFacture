@@ -7,14 +7,20 @@
 		<EnablePreviewFeatures>true</EnablePreviewFeatures>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<RepositoryUrl>https://github.com/SkyFactureGame/SkyFacture</RepositoryUrl>
+		<DefineConstants>SF_DRAWING</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="YamlDotNet" Version="11.2.1" />
+	  <PackageReference Include="Silk.NET.OpenGL" Version="2.15.0" />
+	  <PackageReference Include="Silk.NET.Windowing" Version="2.15.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<Compile Include="../usings.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Buffers\" />
 	</ItemGroup>
 
 </Project>

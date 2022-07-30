@@ -1,12 +1,8 @@
-﻿using SkyFacture.Content;
-using SkyFacture.IO;
+﻿namespace SkyFacture.Windows;
 
-namespace SkyFacture.Windows;
-
-public class Program : ExecutorMain
+public class Program
 {
 	private static void Main(string[] args)
 	{
-		Launch();
 	}
 }
