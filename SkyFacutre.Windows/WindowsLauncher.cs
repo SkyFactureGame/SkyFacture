@@ -21,7 +21,6 @@ public class WindowsLauncher : ClientLauncher
 		DateTime launchTime = DateTime.Now.AddSeconds(-1);
 		try
 		{
-			throw new NotImplementedException();
 			NativeWindow.ShowWindow(NativeWindow.GetConsoleWindow(), DisplayType.Hide);
 
 			WindowOptions options = new()
