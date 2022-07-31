@@ -9,7 +9,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace SkyFacture.Windows;
 
@@ -21,7 +21,9 @@ public class WindowsLauncher : ClientLauncher
 		DateTime launchTime = DateTime.Now.AddSeconds(-1);
 		try
 		{
+#if !DEBUG
 			NativeWindow.ShowWindow(NativeWindow.GetConsoleWindow(), DisplayType.Hide);
+#endif
 
 			WindowOptions options = new()
 			{
@@ -73,6 +75,8 @@ public class WindowsLauncher : ClientLauncher
 	}
 	public unsafe WindowsLauncher(string[] args, WindowOptions windowOptions)
 	{
+		Core.FM = new Desktop.IO.DesktopFileManager(typeof(_resourceHandle).Assembly);
+
 		IWindow window = Window.Create(windowOptions);
 		Core.View = window;
 		window.Initialize();
