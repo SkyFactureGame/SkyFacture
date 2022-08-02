@@ -2,14 +2,18 @@
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using SkyFacture;
 using SkyFacture.Content;
+using SkyFacture.Graphics.Memory;
+using SkyFacture.Graphics.Shaders;
 using System;
 using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace SkyFacture.Windows;
 
@@ -73,22 +77,75 @@ public class WindowsLauncher : ClientLauncher
 			}
 		}
 	}
+	private readonly IWindow window;
 	public unsafe WindowsLauncher(string[] args, WindowOptions windowOptions)
 	{
 		Core.FM = new Desktop.IO.DesktopFileManager(typeof(_resourceHandle).Assembly);
 		Core.SL = new WindowsSpriteLoader();
 
-		IWindow window = Window.Create(windowOptions);
+		window = Window.Create(windowOptions);
+		window.Load += Load;
+		window.Closing += Unload;
+		window.Render += Render;
+		window.Update += Update;
+		window.Resize += Resize;
 		Core.View = window;
 		window.Initialize();
 		Core.Gl = GL.GetApi(window);
-		Image<Rgba32> image = Image.Load<Rgba32>("wicon.png");
-		Span<byte> bytes = new(new byte[image.Width * image.Height * 4]);
-		image.CopyPixelDataTo(bytes);
-
-		RawImage wicon = new(image.Width, image.Height, new Memory<byte>(bytes.ToArray()));
-		window.SetWindowIcon(ref wicon);
-		image.Dispose();
+		
 		window.Run();
+	}
+	private ShaderProgram shader;
+	private Buffer<float> vbo;
+	private Buffer<uint> ebo;
+	private Graphics.Memory.VertexArray vao;
+	private readonly float[] Vert = new float[]
+	{
+		-0.5f, -0.5f,
+		 0.5f, -0.5f,
+		 0.5f,  0.5f,
+		-0.5f,  0.5f
+	};
+	private readonly uint[] Index = new uint[]
+	{
+		0, 1, 2,
+		1, 2, 3
+	};
+	private void Load()
+	{
+		shader = new(Core.FM.InternalRead("SkyFacture/Content/Shaders/default.vert"), Core.FM.InternalRead("SkyFacture/Content/Shaders/default.frag"));
+		
+		vao = new();
+		vao.Bind();
+
+		ebo = new(BufferTargetARB.ElementArrayBuffer);
+		ebo.Bind();
+		ebo.Data((uint)Index.Length, Index);
+
+		vbo = new(BufferTargetARB.ArrayBuffer);
+		vbo.Bind();
+		vbo.Data((uint)Vert.Length, Vert);
+
+		vao.AttributePointer<float>(0, 2, VertexAttribPointerType.Float, sizeof(float) * 2, 0);
+	}
+	private void Update(double delta)
+	{
+
+	}
+	private void Render(double delta)
+	{
+		Core.Gl.ClearColor(Color.Turquoise);
+		Core.Gl.Clear(ClearBufferMask.ColorBufferBit);
+		vao.Bind();
+		Core.Gl.DrawArrays(PrimitiveType.Triangles, 0, 3);
+
+		window.SwapBuffers();	
+	}
+	private void Resize(Vector2D<int> newSize)
+	{
+		Core.Gl.Viewport(newSize);
+	}
+	private void Unload()
+	{
 	}
 }

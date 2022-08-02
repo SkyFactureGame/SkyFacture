@@ -1,5 +1,10 @@
 ﻿#version 330 core
 
-void main() {
+in vec2 fUV;
+in vec4 fColor;
 
+out vec4 FragColor;
+
+void main() {
+	FragColor = fColor;
 }

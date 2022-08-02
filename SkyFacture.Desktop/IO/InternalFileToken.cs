@@ -11,7 +11,7 @@ public class InternalFileToken : FileToken
 		this.asm = asm;
 	}
 	public override Stream OpenForRead()
-		=> asm.GetManifestResourceStream(path)!;
+		=> asm.GetManifestResourceStream(path) ?? throw new System.Exception();
 	public override Stream OpenForWrite()
-		=> asm.GetManifestResourceStream(path)!;
+		=> asm.GetManifestResourceStream(path) ?? throw new System.Exception();
 }
