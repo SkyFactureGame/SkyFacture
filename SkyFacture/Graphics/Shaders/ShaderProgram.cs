@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace SkyFacture.Drawing.Shaders;
+namespace SkyFacture.Graphics.Shaders;
 
 public readonly struct ShaderProgram
 {
@@ -23,9 +23,7 @@ public readonly struct ShaderProgram
 		gl.LinkProgram(Handle);
 		gl.GetProgram(Handle, ProgramPropertyARB.LinkStatus, out int status);
 		if (status == 0)
-		{
 			throw new Exception($"ShaderProgram failed to link with error: {gl.GetProgramInfoLog(Handle)}");
-		}
 		gl.DetachShader(Handle, vert);
 		gl.DetachShader(Handle, frag);
 		gl.DeleteShader(vert);
@@ -34,9 +32,7 @@ public readonly struct ShaderProgram
 		gl.GetProgram(Handle, ProgramPropertyARB.ActiveUniforms, out int numberOfUniforms);
 		uniforms = new Dictionary<string, int>(numberOfUniforms);
 		for (uint i = 0; i < numberOfUniforms; i++)
-		{
 			uniforms[gl.GetActiveUniform(Handle, i, out _, out _)] = (int)i;
-		}
 	}
 	public void Use(GL gl)
 		=> gl.UseProgram(Handle);
@@ -67,9 +63,7 @@ public readonly struct ShaderProgram
 		gl.CompileShader(handle);
 		string infoLog = gl.GetShaderInfoLog(handle);
 		if (!String.IsNullOrWhiteSpace(infoLog))
-		{
 			throw new Exception($"Error compiling shader of type: {type}\nInfo: {infoLog}");
-		}
 
 		return handle;
 	}

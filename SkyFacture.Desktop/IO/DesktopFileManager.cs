@@ -1,5 +1,4 @@
-﻿using SkyFacture.Extensions;
-using SkyFacture.IO;
+﻿using SkyFacture.IO;
 using System;
 using System.IO;
 using System.Linq;

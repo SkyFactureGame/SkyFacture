@@ -17,7 +17,6 @@ public class WindowsLauncher : ClientLauncher
 {
 	public static void Main(string[] args)
 	{
-		// Some magic in future :P
 		DateTime launchTime = DateTime.Now.AddSeconds(-1);
 		try
 		{
@@ -41,7 +40,7 @@ public class WindowsLauncher : ClientLauncher
 		{
 			DateTime dt = DateTime.Now;
 			string crashFileName = $"crash\\{dt:yy-MM-dd HH.mm.ss}.log";
-			Directory.CreateDirectory(Const.CrashFolder);
+			Directory.CreateDirectory("crash");
 			using FileStream fs = File.Open(crashFileName, FileMode.OpenOrCreate);
 			using StreamWriter sw = new(fs);
 
@@ -65,10 +64,11 @@ public class WindowsLauncher : ClientLauncher
 
 				Click ok to open the crash log
 				""";
+			sw.Dispose();
+			fs.Dispose();
+
 			if (NativeWindow.MessageBox(IntPtr.Zero, message, "Sky Facture crash handler", MessageType.OkCancel | MessageType.ErrorIcon) == MessageButtonID.Ok)
 			{
-				sw.Dispose();
-				fs.Dispose();
 				Process.Start("explorer.exe", crashFileName).Dispose();
 			}
 		}
@@ -76,6 +76,7 @@ public class WindowsLauncher : ClientLauncher
 	public unsafe WindowsLauncher(string[] args, WindowOptions windowOptions)
 	{
 		Core.FM = new Desktop.IO.DesktopFileManager(typeof(_resourceHandle).Assembly);
+		Core.SL = new WindowsSpriteLoader();
 
 		IWindow window = Window.Create(windowOptions);
 		Core.View = window;
@@ -88,7 +89,6 @@ public class WindowsLauncher : ClientLauncher
 		RawImage wicon = new(image.Width, image.Height, new Memory<byte>(bytes.ToArray()));
 		window.SetWindowIcon(ref wicon);
 		image.Dispose();
-		GC.Collect();
 		window.Run();
 	}
 }

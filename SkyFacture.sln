@@ -7,9 +7,16 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyFacture", "SkyFacture\Sk
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyFacture.Windows", "SkyFacutre.Windows\SkyFacture.Windows.csproj", "{F3DB6504-F18A-45E0-9715-1391C073B5FB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyFacture.Desktop", "SkyFacture.Desktop\SkyFacture.Desktop.csproj", "{F7D55191-E5EA-4873-A51C-FC8ADA612145}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyFacture.Desktop", "SkyFacture.Desktop\SkyFacture.Desktop.csproj", "{F7D55191-E5EA-4873-A51C-FC8ADA612145}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkyFacture.Content", "SkyFacture.Content\SkyFacture.Content.csproj", "{D3BC9689-63AC-44ED-87F0-B4B67E282E05}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkyFacture.Content", "SkyFacture.Content\SkyFacture.Content.csproj", "{D3BC9689-63AC-44ED-87F0-B4B67E282E05}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GitFiles", "GitFiles", "{5E54F4A3-AA1E-4DC7-AED7-0BDB51EFC890}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -9,3 +9,5 @@ global using mat4 = Silk.NET.Maths.Matrix4X4<float>;
 #endif
 
 global using SC = System.Console;
+global using static SkyFacture.Core;
+
