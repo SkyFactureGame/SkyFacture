@@ -1,20 +1,41 @@
 ﻿using Silk.NET.OpenGL;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 using SkyFacture.Graphics.Textures;
-using System.Drawing;
-using System.Drawing.Imaging;
+using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace SkyFacture.Windows;
 public class WindowsSpriteLoader : SpriteLoader
 {
-	public override void InitializeData(Sprite sprite, Stream imageStream)
+	public override unsafe void InitializeData(Sprite sprite, Stream imageStream, out uint width, out uint height)
 	{
-		using Bitmap bitmap = new(imageStream);
+		Stopwatch sw = new();
+		sw.Start();
+		using Image<Rgba32> image = Image.Load<Rgba32>(imageStream);
 
-		BitmapData data = bitmap.LockBits(new Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadOnly, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+		byte[] pixels = new byte[4 * image.Width * image.Height];
+		fixed (void* pixelsPtr = pixels)
+		{
+			Rgba32* ptr = (Rgba32*)pixelsPtr;
+			uint pixelN = 0;
+			for (int y = 0; y < image.Height; y++)
+				for (int x = 0; x < image.Width; x++)
+				{
+					Rgba32 pixel = image[x, image.Height - y - 1];
+					ptr[pixelN] = pixel;
+					pixelN++;
+				}
 
-		Core.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba8, (uint)bitmap.Width, (uint)bitmap.Height, 0, Silk.NET.OpenGL.PixelFormat.Rgba, PixelType.UnsignedByte, data.Scan0);
+			sw.Stop();
+			Console.WriteLine($"Texture loading: {sw.ElapsedMilliseconds}");
 
-		bitmap.UnlockBits(data);
+			Core.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)image.Width, (uint)image.Height, 0,
+			PixelFormat.Bgra, PixelType.UnsignedByte, ptr);
+		}
+
+		width = (uint)image.Width;
+		height = (uint)image.Height;
 	}
 }

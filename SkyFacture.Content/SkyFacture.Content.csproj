@@ -8,5 +8,9 @@
 	<ItemGroup>
 		<EmbeddedResource Include="**/**" Exclude="**/*.cs;**/*.csproj;obj/**;bin/**" />
 	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Sprites\Special\" />
+	</ItemGroup>
 	
 </Project>

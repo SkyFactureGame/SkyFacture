@@ -4,5 +4,5 @@ namespace SkyFacture.Graphics.Textures;
 
 public abstract class SpriteLoader
 {
-	public abstract void InitializeData(Sprite sprite, Stream imageStream);
+	public abstract void InitializeData(Sprite sprite, Stream imageStream, out uint width, out uint height);
 }

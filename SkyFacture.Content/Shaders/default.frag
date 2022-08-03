@@ -5,6 +5,8 @@ in vec4 fColor;
 
 out vec4 FragColor;
 
+uniform sampler2D uTex;
+
 void main() {
-	FragColor = fColor;
+	FragColor = texture(uTex, fUV);
 }

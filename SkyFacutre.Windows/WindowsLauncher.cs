@@ -6,6 +6,7 @@ using SkyFacture;
 using SkyFacture.Content;
 using SkyFacture.Graphics.Memory;
 using SkyFacture.Graphics.Shaders;
+using SkyFacture.Graphics.Textures;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -17,7 +18,7 @@ using System.Runtime.InteropServices;
 
 namespace SkyFacture.Windows;
 
-public class WindowsLauncher : ClientLauncher
+public unsafe class WindowsLauncher : ClientLauncher
 {
 	public static void Main(string[] args)
 	{
@@ -78,7 +79,7 @@ public class WindowsLauncher : ClientLauncher
 		}
 	}
 	private readonly IWindow window;
-	public unsafe WindowsLauncher(string[] args, WindowOptions windowOptions)
+	public WindowsLauncher(string[] args, WindowOptions windowOptions)
 	{
 		Core.FM = new Desktop.IO.DesktopFileManager(typeof(_resourceHandle).Assembly);
 		Core.SL = new WindowsSpriteLoader();
@@ -91,42 +92,52 @@ public class WindowsLauncher : ClientLauncher
 		window.Resize += Resize;
 		Core.View = window;
 		window.Initialize();
-		Core.Gl = GL.GetApi(window);
 		
 		window.Run();
 	}
+
 	private ShaderProgram shader;
-	private Buffer<float> vbo;
-	private Buffer<uint> ebo;
-	private Graphics.Memory.VertexArray vao;
+	private Sprite sprite;
+	private Buffer<uint> EBO;
+	private Buffer<float> VBO;
+	private Graphics.Memory.VertexArray VAO;
 	private readonly float[] Vert = new float[]
 	{
-		-0.5f, -0.5f,
-		 0.5f, -0.5f,
-		 0.5f,  0.5f,
-		-0.5f,  0.5f
+		//X    Y      Z     U   V
+		 0.5f,  0.5f, 0.0f, 1f, 0f, // 0
+		 0.5f, -0.5f, 0.0f, 1f, 1f, // 1
+		-0.5f, -0.5f, 0.0f, 0f, 1f, // 2
+		-0.5f,  0.5f, 0.5f, 0f, 0f, // 3
 	};
 	private readonly uint[] Index = new uint[]
 	{
-		0, 1, 2,
+		0, 1, 3,
 		1, 2, 3
 	};
 	private void Load()
 	{
+		Core.Gl = window.CreateOpenGL();
+
 		shader = new(Core.FM.InternalRead("SkyFacture/Content/Shaders/default.vert"), Core.FM.InternalRead("SkyFacture/Content/Shaders/default.frag"));
-		
-		vao = new();
-		vao.Bind();
+		using (Stream spriteStream = Core.FM.Internal("SkyFacture/Content/Sprites/Special/debug.png").OpenForRead())
+		{
+			sprite = new(spriteStream);
+		}
+		EBO = new(BufferTargetARB.ElementArrayBuffer);
+		EBO.Bind();
+		EBO.Data(Index);
 
-		ebo = new(BufferTargetARB.ElementArrayBuffer);
-		ebo.Bind();
-		ebo.Data((uint)Index.Length, Index);
+		VBO = new(BufferTargetARB.ArrayBuffer);
+		VBO.Bind();
+		VBO.Data(Vert);
 
-		vbo = new(BufferTargetARB.ArrayBuffer);
-		vbo.Bind();
-		vbo.Data((uint)Vert.Length, Vert);
+		VAO = new();
+		VAO.Bind();
 
-		vao.AttributePointer<float>(0, 2, VertexAttribPointerType.Float, sizeof(float) * 2, 0);
+		EBO.Bind();
+
+		VAO.AttributePointer(0, 3, VertexAttribPointerType.Float, 5 * sizeof(float), 0);
+		VAO.AttributePointer(1, 2, VertexAttribPointerType.Float, 5 * sizeof(float), 3 * sizeof(float));
 	}
 	private void Update(double delta)
 	{
@@ -134,12 +145,17 @@ public class WindowsLauncher : ClientLauncher
 	}
 	private void Render(double delta)
 	{
-		Core.Gl.ClearColor(Color.Turquoise);
+		Core.Gl.ClearColor(Color.Black);
 		Core.Gl.Clear(ClearBufferMask.ColorBufferBit);
-		vao.Bind();
-		Core.Gl.DrawArrays(PrimitiveType.Triangles, 0, 3);
 
-		window.SwapBuffers();	
+		VAO.Bind();
+		shader.Use();
+
+		sprite.Bind(TextureUnit.Texture0);
+		shader.UniformInt("uTex", 0);
+		Core.Gl.DrawElements(PrimitiveType.Triangles, (uint)Index.Length, DrawElementsType.UnsignedInt, null);
+
+		window.SwapBuffers();
 	}
 	private void Resize(Vector2D<int> newSize)
 	{

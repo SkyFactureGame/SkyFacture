@@ -4,9 +4,6 @@ using Silk.NET.OpenGL;
 
 namespace SkyFacture.Graphics.Memory;
 
-/// <summary>
-/// Memory allocated on Graphic card
-/// </summary>
 [DebuggerDisplay($"{{{nameof(ToString)}(),nq}}")]
 public class Buffer<T> : IDisposable where T : unmanaged
 {
@@ -19,16 +16,23 @@ public class Buffer<T> : IDisposable where T : unmanaged
 	}
 	public void Bind()
 		=> Gl.BindBuffer(Target, Handle);
-	public unsafe void Data(uint size, T[] data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
+	public unsafe void Data(T[] data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
 	{
 		fixed (void* ptr = data)
 		{
-			Gl.BufferData(Target, size, ptr, usage);
+			Gl.BufferData(Target, (uint)(data.Length * sizeof(T)), ptr, usage);
+		}
+	}
+	public unsafe void Data(uint sizeBytes, T[] data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
+	{
+		fixed (void* ptr = data)
+		{
+			Gl.BufferData(Target, sizeBytes, ptr, usage);
 		}
 	}
 	public unsafe void Data(uint size, void* data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
 	{
-		Gl.BufferData(Target, size, data, usage);
+		Gl.BufferData(Target, (uint)(size * sizeof(T)), data, usage);
 	}
 	public unsafe void SubData(nint offset, nuint size, T[] data)
 	{

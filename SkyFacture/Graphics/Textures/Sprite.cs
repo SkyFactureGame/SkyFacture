@@ -7,14 +7,14 @@ namespace SkyFacture.Graphics.Textures;
 public class Sprite : IDisposable
 {
 	public readonly uint Handle;
-	public readonly int Width, Height;
+	public readonly uint Width, Height;
 
 	public Sprite(Stream imageStream)
 	{
 		Handle = Gl.GenTexture();
 
 		Gl.BindTexture(TextureTarget.Texture2D, Handle);
-		SL.InitializeData(this, imageStream);
+		SL.InitializeData(this, imageStream, out Width, out Height);
 		SetParameters();
 	}
 	private void SetParameters(bool blending = false)

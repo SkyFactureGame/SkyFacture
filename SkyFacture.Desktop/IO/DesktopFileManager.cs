@@ -32,7 +32,7 @@ public class DesktopFileManager : FileManager
 	{
 		return type switch
 		{
-			GameSource => new InternalFileToken(asm, path),
+			GameSource => new InternalFileToken(asm, ResolvePath(path)),
 			Machine => new LocalFileToken(path),
 			_ => throw new ArgumentException("Invalid StorageType", nameof(type)),
 		};

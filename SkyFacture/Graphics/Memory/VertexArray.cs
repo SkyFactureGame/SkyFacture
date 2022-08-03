@@ -13,9 +13,9 @@ public class VertexArray : IDisposable
 	}
 	public void Bind()
 		=> Gl.BindVertexArray(Handle);
-	public unsafe void AttributePointer<T>(uint index, int count, VertexAttribPointerType type, uint vertexSize, int offset) where T : unmanaged
+	public unsafe void AttributePointer(uint index, int count, VertexAttribPointerType type, uint vertexSize, int offset)
 	{
-		Gl.VertexAttribPointer(index, count, type, false, vertexSize * (uint)sizeof(T), (void*)(offset * sizeof(T)));
+		Gl.VertexAttribPointer(index, count, type, false, vertexSize, (void*)offset);
 		Gl.EnableVertexAttribArray(index);
 	}
 	public void Dispose()
