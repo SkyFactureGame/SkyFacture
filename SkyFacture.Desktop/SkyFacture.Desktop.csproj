@@ -17,6 +17,7 @@
   <ItemGroup>
 	<ProjectReference Include="..\SkyFacture.Content\SkyFacture.Content.csproj" />
 	<ProjectReference Include="..\SkyFacture\SkyFacture.csproj" />
+	<PackageReference Include="Silk.NET.Windowing" Version="2.15.0" />
   </ItemGroup>
 
 </Project>

@@ -7,6 +7,7 @@ using SkyFacture.Content;
 using SkyFacture.Graphics.Memory;
 using SkyFacture.Graphics.Shaders;
 using SkyFacture.Graphics.Textures;
+using SkyFacture.Scenes;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -83,6 +84,7 @@ public unsafe class WindowsLauncher : ClientLauncher
 	{
 		Core.FM = new Desktop.IO.DesktopFileManager(typeof(_resourceHandle).Assembly);
 		Core.SL = new WindowsSpriteLoader();
+		Core.SM = new Scenes.SceneManager();
 
 		window = Window.Create(windowOptions);
 		window.Load += Load;
@@ -138,6 +140,8 @@ public unsafe class WindowsLauncher : ClientLauncher
 
 		VAO.AttributePointer(0, 3, VertexAttribPointerType.Float, 5 * sizeof(float), 0);
 		VAO.AttributePointer(1, 2, VertexAttribPointerType.Float, 5 * sizeof(float), 3 * sizeof(float));
+
+		Core.SM.ChangeScene(new LoadingScene());
 	}
 	private void Update(double delta)
 	{
@@ -163,5 +167,6 @@ public unsafe class WindowsLauncher : ClientLauncher
 	}
 	private void Unload()
 	{
+		Core.SM.Dispose();
 	}
 }

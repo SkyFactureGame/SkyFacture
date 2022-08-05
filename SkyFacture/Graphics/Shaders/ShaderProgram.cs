@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 
 namespace SkyFacture.Graphics.Shaders;
 
-public readonly struct ShaderProgram
+public readonly struct ShaderProgram : IDisposable
 {
 	public readonly uint Handle;
 	public ShaderProgram(string vertexCode, string fragmentCode)
@@ -51,4 +51,7 @@ public readonly struct ShaderProgram
 
 		return handle;
 	}
+
+	public void Dispose()
+		=> Gl.DeleteProgram(Handle);
 }
