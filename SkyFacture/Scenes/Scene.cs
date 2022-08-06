@@ -1,21 +1,10 @@
 ﻿using System;
 
 namespace SkyFacture.Scenes;
-public class Scene : IDisposable
+public abstract class Scene : IDisposable
 {
-	public virtual void Initialize()
-	{
-		Console.WriteLine("Init");
-	}
-	public virtual void Update()
-	{
-	}
-	public virtual void Render()
-	{
-
-	}
-	public virtual void Dispose()
-	{
-
-	}
+	public abstract void Initialize();
+	public abstract void Update();
+	public abstract void Render();
+	public abstract void Dispose();
 }

@@ -9,6 +9,7 @@ public class SceneManager : IDisposable
 	{
 		this.scene?.Dispose();
 		this.scene = scene;
+		this.scene.Initialize();
 	}
 	public void Render()
 	{

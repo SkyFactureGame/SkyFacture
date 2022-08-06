@@ -2,6 +2,7 @@
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
+using Silk.NET.Input;
 using SkyFacture;
 using SkyFacture.Content;
 using SkyFacture.Graphics.Memory;
@@ -35,7 +36,7 @@ public unsafe class WindowsLauncher : ClientLauncher
 				API = new GraphicsAPI(ContextAPI.OpenGL, new(3,3)),
 				Title = "Sky Facture",
 				Size = new Vector2D<int>(400, 400),
-				FramesPerSecond = 500,
+				FramesPerSecond = Environment.UserName == "NiTiSon" ? 5000 : 500,
 				UpdatesPerSecond = 50,
 				VSync = args.Contains("-vsync"),
 			};
@@ -97,67 +98,30 @@ public unsafe class WindowsLauncher : ClientLauncher
 		
 		window.Run();
 	}
-
-	private ShaderProgram shader;
-	private Sprite sprite;
-	private Buffer<uint> EBO;
-	private Buffer<float> VBO;
-	private Graphics.Memory.VertexArray VAO;
-	private readonly float[] Vert = new float[]
-	{
-		//X    Y      Z     U   V
-		 0.5f,  0.5f, 0.0f, 1f, 0f, // 0
-		 0.5f, -0.5f, 0.0f, 1f, 1f, // 1
-		-0.5f, -0.5f, 0.0f, 0f, 1f, // 2
-		-0.5f,  0.5f, 0.5f, 0f, 0f, // 3
-	};
-	private readonly uint[] Index = new uint[]
-	{
-		0, 1, 3,
-		1, 2, 3
-	};
 	private void Load()
 	{
 		Core.Gl = window.CreateOpenGL();
-
-		shader = new(Core.FM.InternalRead("SkyFacture/Content/Shaders/default.vert"), Core.FM.InternalRead("SkyFacture/Content/Shaders/default.frag"));
-		using (Stream spriteStream = Core.FM.Internal("SkyFacture/Content/Sprites/Special/debug.png").OpenForRead())
-		{
-			sprite = new(spriteStream);
-		}
-		EBO = new(BufferTargetARB.ElementArrayBuffer);
-		EBO.Bind();
-		EBO.Data(Index);
-
-		VBO = new(BufferTargetARB.ArrayBuffer);
-		VBO.Bind();
-		VBO.Data(Vert);
-
-		VAO = new();
-		VAO.Bind();
-
-		EBO.Bind();
-
-		VAO.AttributePointer(0, 3, VertexAttribPointerType.Float, 5 * sizeof(float), 0);
-		VAO.AttributePointer(1, 2, VertexAttribPointerType.Float, 5 * sizeof(float), 3 * sizeof(float));
-
 		Core.SM.ChangeScene(new LoadingScene());
+
+		IInputContext inp = window.CreateInput();
+		foreach (IKeyboard board in inp.Keyboards)
+		{
+			board.KeyDown += (kb, k, a) =>
+			{
+				if (k is Key.F11)
+				{
+					window.WindowState = window.WindowState == WindowState.Fullscreen ? WindowState.Normal : WindowState.Fullscreen;
+				}
+			};
+		}
 	}
 	private void Update(double delta)
 	{
-
+		Core.SM.Update();
 	}
 	private void Render(double delta)
 	{
-		Core.Gl.ClearColor(Color.Black);
-		Core.Gl.Clear(ClearBufferMask.ColorBufferBit);
-
-		VAO.Bind();
-		shader.Use();
-
-		sprite.Bind(TextureUnit.Texture0);
-		shader.UniformInt("uTex", 0);
-		Core.Gl.DrawElements(PrimitiveType.Triangles, (uint)Index.Length, DrawElementsType.UnsignedInt, null);
+		Core.SM.Render();
 
 		window.SwapBuffers();
 	}
