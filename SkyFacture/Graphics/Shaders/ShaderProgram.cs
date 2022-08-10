@@ -41,7 +41,7 @@ public readonly struct ShaderProgram : IDisposable
 		=> Gl.Uniform1(Gl.GetUniformLocation(Handle, name), value);
 	public void UniformSingle(string name, float value)
 		=> Gl.Uniform1(Gl.GetUniformLocation(Handle, name), value);
-	public unsafe void UniformMat4<T>(string name, mat4 mat4)
+	public unsafe void UniformMat4<T>(string name, Matrix4X4<T> mat4) where T : unmanaged, IFormattable, IEquatable<T>, IComparable<T>
 		=> Gl.UniformMatrix4(Gl.GetUniformLocation(Handle, name), 1, false, (float*)&mat4);
 	private static uint LoadShader(ShaderType type, string code)
 	{

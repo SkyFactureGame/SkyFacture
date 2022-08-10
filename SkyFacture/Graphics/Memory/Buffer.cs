@@ -16,21 +16,21 @@ public class Buffer<T> : IDisposable where T : unmanaged
 	}
 	public void Bind()
 		=> Gl.BindBuffer(Target, Handle);
-	public unsafe void Data(T[] data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
+	public unsafe void DataArray(T[] data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
 	{
 		fixed (void* ptr = data)
 		{
 			Gl.BufferData(Target, (uint)(data.Length * sizeof(T)), ptr, usage);
 		}
 	}
-	public unsafe void Data(uint sizeBytes, T[] data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
+	public unsafe void DataArray(uint elementsCount, T[] data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
 	{
 		fixed (void* ptr = data)
 		{
-			Gl.BufferData(Target, sizeBytes, ptr, usage);
+			Gl.BufferData(Target, (nuint)(elementsCount * sizeof(T)), ptr, usage);
 		}
 	}
-	public unsafe void Data(uint size, void* data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
+	public unsafe void DataPtr(uint size, void* data, BufferUsageARB usage = BufferUsageARB.StaticDraw)
 	{
 		Gl.BufferData(Target, (uint)(size * sizeof(T)), data, usage);
 	}

@@ -4,6 +4,7 @@ using SkyFacture.Graphics.Batching;
 using SkyFacture.Graphics.Memory;
 using SkyFacture.Graphics.Shaders;
 using SkyFacture.Graphics.Textures;
+using System;
 using System.Drawing;
 using System.IO;
 
@@ -12,20 +13,6 @@ public unsafe class LoadingScene : Scene
 {
 	private readonly SpriteBatcher sb = new(Shaders.Default);
 	private Sprite sprite;
-	private readonly float[] Vert = new float[]
-	{
-		//X    Y      Z     U   V
-		 0.5f,  0.5f, 0.0f, 1f, 0f, // 0
-		 0.5f, -0.5f, 0.0f, 1f, 1f, // 1
-		-0.5f, -0.5f, 0.0f, 0f, 1f, // 2
-		-0.5f,  0.5f, 0.5f, 0f, 0f, // 3
-	};
-	private readonly uint[] Index = new uint[]
-	{
-		0, 1, 3,
-		1, 2, 3
-	};
-	private float progress = -1f;
 	public override void Initialize()
 	{
 		using (Stream spriteStream = FM.Internal("debug.png").OpenForRead())
@@ -56,13 +43,13 @@ public unsafe class LoadingScene : Scene
 		Gl.ClearColor(Color.Black);
 		Gl.Clear(ClearBufferMask.ColorBufferBit);
 
+		sb.Draw((SpriteRegion)sprite, default, vec2.One);
+		sb.ZLayer(0f);
+		sb.Draw((SpriteRegion)sprite, new(0.25f, 0.25f), vec2.One);
+		sb.ZLayer(1f);
+		sb.Flush();
 	}
 	public override void Update(double delta)
 	{
-		progress += (float)delta;
-		if (progress > 1f)
-		{
-			progress = -1f;
-		}
 	}
 }

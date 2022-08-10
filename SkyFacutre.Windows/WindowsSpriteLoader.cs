@@ -31,7 +31,9 @@ public class WindowsSpriteLoader : SpriteLoader
 				}
 
 			sw.Stop();
-			Console.WriteLine($"Texture loading: {sw.ElapsedMilliseconds}");
+
+			// 90~160ms
+			Console.WriteLine($"Texture loading: {sw.ElapsedMilliseconds}ms");
 
 			Core.Gl.TexImage2D(TextureTarget.Texture2D, 0, InternalFormat.Rgba, (uint)image.Width, (uint)image.Height, 0,
 			PixelFormat.Bgra, PixelType.UnsignedByte, ptr);
