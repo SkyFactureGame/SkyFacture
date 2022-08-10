@@ -34,4 +34,7 @@ public class Sprite : IDisposable
 	}
 	public void Dispose()
 		=> Gl.DeleteTexture(Handle);
+
+	public static explicit operator SpriteRegion(Sprite sprite)
+		=> new(sprite, new vec2(0, 0), new vec2(1, 1));
 }

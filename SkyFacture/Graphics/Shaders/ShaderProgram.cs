@@ -1,5 +1,6 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.OpenGL;
+using SkyFacture.IO;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -31,12 +32,16 @@ public readonly struct ShaderProgram : IDisposable
 		Gl.DeleteShader(frag);
 	}
 	public void Use()
-		=> Gl.UseProgram(Handle);
+	{
+		if (Handle is 0)
+			throw new Exception("Shader is null");
+		Gl.UseProgram(Handle);
+	}
 	public void UniformInt(string name, int value)
 		=> Gl.Uniform1(Gl.GetUniformLocation(Handle, name), value);
 	public void UniformSingle(string name, float value)
 		=> Gl.Uniform1(Gl.GetUniformLocation(Handle, name), value);
-	public unsafe void UniformMat4<T>(string name, Matrix4X4<float> mat4)
+	public unsafe void UniformMat4<T>(string name, mat4 mat4)
 		=> Gl.UniformMatrix4(Gl.GetUniformLocation(Handle, name), 1, false, (float*)&mat4);
 	private static uint LoadShader(ShaderType type, string code)
 	{
@@ -54,4 +59,10 @@ public readonly struct ShaderProgram : IDisposable
 
 	public void Dispose()
 		=> Gl.DeleteProgram(Handle);
+	public static ShaderProgram Create(FileManager shaderSource, string vertName, string fragName)
+	{
+		string vert = shaderSource.Internal(vertName + ".vert").ReadAllStrings();
+		string frag = shaderSource.Internal(fragName + ".frag").ReadAllStrings();
+		return new(vert, frag);
+	}
 }

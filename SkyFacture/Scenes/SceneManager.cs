@@ -11,13 +11,13 @@ public class SceneManager : IDisposable
 		this.scene = scene;
 		this.scene.Initialize();
 	}
-	public void Render()
+	public void Render(double delta)
 	{
-		scene?.Render();
+		scene?.Render(delta);
 	}
-	public void Update()
+	public void Update(double delta)
 	{
-		scene?.Update();
+		scene?.Update(delta);
 	}
 	public void Dispose()
 	{

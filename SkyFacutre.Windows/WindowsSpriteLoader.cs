@@ -7,6 +7,8 @@ using System.Diagnostics;
 using System.IO;
 
 namespace SkyFacture.Windows;
+
+//TODO: Use default library to icrease loading speed on windows
 public class WindowsSpriteLoader : SpriteLoader
 {
 	public override unsafe void InitializeData(Sprite sprite, Stream imageStream, out uint width, out uint height)

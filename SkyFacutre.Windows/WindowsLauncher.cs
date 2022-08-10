@@ -1,22 +1,13 @@
-﻿using Silk.NET.Core;
+﻿using Silk.NET.Input;
 using Silk.NET.Maths;
 using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using Silk.NET.Input;
-using SkyFacture;
 using SkyFacture.Content;
-using SkyFacture.Graphics.Memory;
-using SkyFacture.Graphics.Shaders;
-using SkyFacture.Graphics.Textures;
 using SkyFacture.Scenes;
 using System;
 using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
-using System.Reflection;
-using System.Runtime.InteropServices;
 
 namespace SkyFacture.Windows;
 
@@ -117,12 +108,11 @@ public unsafe class WindowsLauncher : ClientLauncher
 	}
 	private void Update(double delta)
 	{
-		Core.SM.Update();
+		Core.SM.Update(delta);
 	}
 	private void Render(double delta)
 	{
-		Core.SM.Render();
-
+		Core.SM.Render(delta);
 		window.SwapBuffers();
 	}
 	private void Resize(Vector2D<int> newSize)
