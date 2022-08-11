@@ -20,11 +20,7 @@ public static class SkyMath
 
 	//public static T PingPong<T>(T border, T value) where T : IComparisonOperators<T>
 	public static double PingPong(double border, double value)
-	{
-		return (int)(value / border) % 2 == 0 ? border - value % border : value % border;
-	}
+		=> (int)(value / border) % 2 == 0 ? value % border : border - value % border;
 	public static double NegatePong(double border, double value)
-	{
-		return (int)(value / border) % 2 == 0 ? -(value % border) : value % border;
-	}
+		=> (int)(value / border) % 2 == 0 ? value % border : -(value % border);
 }

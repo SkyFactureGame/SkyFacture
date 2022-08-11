@@ -10,7 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Sprites\Special\" />
+	  <None Remove="Sprites\Special\ui.atlas" />
 	</ItemGroup>
 	
 </Project>

@@ -1,0 +1,11 @@
+﻿blending: true
+regions:
+  - size: 32x32
+	pos: 0x0
+	name: lb-box
+  - size: 32x32
+    pos: 0x32
+	name: cb-box
+  - size: 32x32
+	pos: 0x64
+	name: rb-box
