@@ -6,6 +6,7 @@ using SkyFacture.Content;
 using SkyFacture.Scenes;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -112,6 +113,9 @@ public unsafe class WindowsLauncher : ClientLauncher
 	}
 	private void Render(double delta)
 	{
+		Core.Gl.ClearColor(Color.Black);
+		Core.Gl.Clear(ClearBufferMask.ColorBufferBit);
+
 		Core.SM.Render(delta);
 		window.SwapBuffers();
 	}

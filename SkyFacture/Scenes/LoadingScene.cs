@@ -26,9 +26,6 @@ public unsafe class LoadingScene : Scene
 	}
 	public override void Render(double delta)
 	{
-		Gl.ClearColor(Color.Black);
-		Gl.Clear(ClearBufferMask.ColorBufferBit);
-
 		sb.Draw((SpriteRegion)sprite, default, vec2.One);
 		sb.Draw((SpriteRegion)sprite, new(0.25f, 0.25f), vec2.One);
 
@@ -41,6 +38,8 @@ public unsafe class LoadingScene : Scene
 		if (f >= 12f)
 		{
 			SM.ChangeScene(new MainMenuScene());
+			f = 0;
+			SC.WriteLine("W");
 		}
 	}
 }

@@ -21,4 +21,8 @@
 		<PackageReference Include="Silk.NET.Windowing" Version="$(SilkNetVersion)" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Graphics\UI\" />
+	</ItemGroup>
+
 </Project>
