@@ -1,3 +1,4 @@
 *		text=auto
 *.cs    diff=csharp
 *.sln   merge=binary
+*.atlas linguist-language=yml linguist-detectable

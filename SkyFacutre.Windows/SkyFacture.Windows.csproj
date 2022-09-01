@@ -5,17 +5,16 @@
 		<TargetFramework>net6.0-windows</TargetFramework>
 		<Nullable>enable</Nullable>
 		<EnablePreviewFeatures>true</EnablePreviewFeatures>
-		<StartupObject>SkyFacture.Windows.Program</StartupObject>
-		<AssemblyName></AssemblyName>
-		<ApplicationIcon>icon.ico</ApplicationIcon>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<ApplicationIcon>wicon.ico</ApplicationIcon>
 	</PropertyGroup>
-
+	
 	<ItemGroup>
-	  <Content Include="icon.ico" />
+	  <PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
 	</ItemGroup>
-
+	
 	<ItemGroup>
-		<ProjectReference Include="..\SkyFacture\SkyFacture.csproj" />
+	  <ProjectReference Include="..\SkyFacture\SkyFacture.csproj" />
 	</ItemGroup>
 
 </Project>
