@@ -1,12 +1,8 @@
 ﻿using Silk.NET.Input;
 using Silk.NET.Maths;
-using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
-using SkyFacture.Content;
-using SkyFacture.Scenes;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 
@@ -27,10 +23,10 @@ public unsafe class WindowsLauncher : ClientLauncher
 			{
 				API = new GraphicsAPI(ContextAPI.OpenGL, new(3,3)),
 				Title = "Sky Facture",
-				Size = new Vector2D<int>(400, 400),
-				FramesPerSecond = Environment.UserName == "NiTiSon" ? 5000 : 500,
-				UpdatesPerSecond = 50,
-				VSync = args.Contains("-vsync"),
+				Size = new Vector2D<int>(900, 700),
+				FramesPerSecond = Environment.UserName == "NiTiSon" ? 5000 : 500, // (double)Options.Int("graphics.render-per-second", 144);
+				UpdatesPerSecond = Const.UpdatesPerSecond,
+				VSync = args.Contains("-vsync"), // Options.Bool("graphics.vsync-enabled", true);
 			};
 			WindowsLauncher wl = new(args, options);
 
@@ -75,9 +71,6 @@ public unsafe class WindowsLauncher : ClientLauncher
 	private readonly IWindow window;
 	public WindowsLauncher(string[] args, WindowOptions windowOptions)
 	{
-		Core.FM = new Desktop.IO.DesktopFileManager(typeof(_resourceHandle).Assembly);
-		Core.SL = new WindowsSpriteLoader();
-		Core.SM = new Scenes.SceneManager();
 
 		window = Window.Create(windowOptions);
 		window.Load += Load;
@@ -85,16 +78,12 @@ public unsafe class WindowsLauncher : ClientLauncher
 		window.Render += Render;
 		window.Update += Update;
 		window.Resize += Resize;
-		Core.View = window;
 		window.Initialize();
 		
 		window.Run();
 	}
 	private void Load()
 	{
-		Core.Gl = window.CreateOpenGL();
-		Core.SM.ChangeScene(new LoadingScene());
-
 		IInputContext inp = window.CreateInput();
 		foreach (IKeyboard board in inp.Keyboards)
 		{
@@ -109,22 +98,15 @@ public unsafe class WindowsLauncher : ClientLauncher
 	}
 	private void Update(double delta)
 	{
-		Core.SM.Update(delta);
 	}
 	private void Render(double delta)
 	{
-		Core.Gl.ClearColor(Color.Black);
-		Core.Gl.Clear(ClearBufferMask.ColorBufferBit);
-
-		Core.SM.Render(delta);
 		window.SwapBuffers();
 	}
 	private void Resize(Vector2D<int> newSize)
 	{
-		Core.Gl.Viewport(newSize);
 	}
 	private void Unload()
 	{
-		Core.SM.Dispose();
 	}
 }

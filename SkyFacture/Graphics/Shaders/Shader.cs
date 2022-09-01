@@ -1,17 +1,13 @@
 ﻿using Silk.NET.Maths;
 using Silk.NET.OpenGL;
-using SkyFacture.IO;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Runtime.InteropServices;
 
 namespace SkyFacture.Graphics.Shaders;
 
-public readonly struct ShaderProgram : IDisposable
+public readonly struct Shader : IDisposable
 {
 	public readonly uint Handle;
-	public ShaderProgram(string vertexCode, string fragmentCode)
+	public Shader(string vertexCode, string fragmentCode)
 	{
 		uint vert, frag;
 		vert = LoadShader(ShaderType.VertexShader, vertexCode);
@@ -59,10 +55,4 @@ public readonly struct ShaderProgram : IDisposable
 
 	public void Dispose()
 		=> Gl.DeleteProgram(Handle);
-	public static ShaderProgram Create(FileManager shaderSource, string vertName, string fragName)
-	{
-		string vert = shaderSource.Internal(vertName + ".vert").ReadAllStrings();
-		string frag = shaderSource.Internal(fragName + ".frag").ReadAllStrings();
-		return new(vert, frag);
-	}
 }

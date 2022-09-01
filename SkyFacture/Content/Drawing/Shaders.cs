@@ -3,9 +3,9 @@
 namespace SkyFacture.Content.Drawing;
 public static class Shaders
 {
-	public static readonly ShaderProgram Default;
+	public static readonly Shader Default;
 	static Shaders()
 	{
-		Default = ShaderProgram.Create(FM, "default", "default");
+		//Default = Shader.Create(FM, "default", "default");
 	}
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SkyFacture.Windows": {
+      "commandName": "Project",
+      "remoteDebugEnabled": false
+    }
+  }
+}

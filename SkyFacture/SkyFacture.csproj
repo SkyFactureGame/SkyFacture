@@ -19,10 +19,13 @@
 		<PackageReference Include="YamlDotNet" Version="12.0.0" />
 		<PackageReference Include="Silk.NET.OpenGL" Version="$(SilkNetVersion)" />
 		<PackageReference Include="Silk.NET.Windowing" Version="$(SilkNetVersion)" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="2.1.3" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <Folder Include="Graphics\UI\" />
+	  <Folder Include="Assets\" />
+	  <Folder Include="IO\" />
 	</ItemGroup>
 
 </Project>

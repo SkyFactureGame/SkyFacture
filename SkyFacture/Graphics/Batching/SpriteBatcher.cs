@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace SkyFacture.Graphics.Batching;
 public class SpriteBatcher
 {
-	private readonly ShaderProgram shader;
+	private readonly Shader shader;
 	private readonly List<DrawRequest> requests = new((int)MaxRequests);
 	private const uint MaxRequests = 128;
 	private const uint VertexSize = sizeof(float) * (2 + 3 + 4);
@@ -18,7 +18,7 @@ public class SpriteBatcher
 	private Buffer<float> VBO;
 	private VertexArray VAO;
 
-	public unsafe SpriteBatcher(ShaderProgram shader)
+	public unsafe SpriteBatcher(Shader shader)
 	{
 		this.shader = shader;
 
@@ -39,7 +39,7 @@ public class SpriteBatcher
 		VAO.Dispose();
 		VBO.Dispose();
 	}
-	public void Draw(SpriteRegion region, vec2 pos, vec2 size)
+	public void Draw(Region region, vec2 pos, vec2 size)
 	{
 		requests.Add(new(region, new(pos, lastZ), size, default, vec4.One));
 		if (RequestCount >= MaxRequests -1)
@@ -47,7 +47,7 @@ public class SpriteBatcher
 			Flush();
 		}
 	}
-	private float lastZ = -1f;
+	private float lastZ = -0f;
 	public void ZLayer(float z)
 	{
 		lastZ = InvertedZSort ? -z : z;
@@ -60,9 +60,10 @@ public class SpriteBatcher
 		shader.Use();
 		shader.UniformMat4("uMat", mat4.Identity);
 
+		DrawRequest[] drawRequests = requests.OrderBy(s => s.pos.Z).ToArray();
 		for (uint i = 0; i < RequestCount; i++)
 		{
-			DrawRequest req = requests[(int)i];
+			DrawRequest req = drawRequests[(int)i];
 			uint offset = i * VertexSize * 6;
 
 			vec3 pos = req.pos;

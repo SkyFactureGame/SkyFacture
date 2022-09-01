@@ -8,5 +8,4 @@ global using mat4 = Silk.NET.Maths.Matrix4X4<float>;
 global using matOp = Silk.NET.Maths.Matrix4X4;
 
 global using SC = System.Console;
-global using static SkyFacture.Core;
-
+global using static SkyFacture.App;
