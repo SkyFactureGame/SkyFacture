@@ -18,6 +18,12 @@ public static class Registry<T> where T : notnull
 			return true;
 		}
 	}
+	public static T Get(Id id, T @default)
+	{
+		if (values.ContainsKey(id))
+			return values[id];
+		else return @default;
+	}
 	public static IEnumerable<T> GetAll()
 		=> values.Values;
 	static Registry()

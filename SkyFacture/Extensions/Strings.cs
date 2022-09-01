@@ -29,4 +29,19 @@ public static class Strings
 			throw new System.ArgumentException(null, nameof(target));
 		return str.Remove(index, replace.Length).Insert(index, replace);
 	}
+	public static string NormalizeManifestName(this string str)
+	{
+		string result = str;
+	BEGIN:
+		int index = result.IndexOf('.');
+		if (index == -1)
+			return result;
+
+		int lastIndex = result.LastIndexOf('.');
+		if (index == lastIndex)
+			return result;
+
+		result = string.Concat(result.Substring(0, index), "/", result.Substring(index + 1, result.Length - index - 1));
+		goto BEGIN;
+	}
 }

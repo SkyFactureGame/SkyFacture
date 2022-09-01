@@ -17,6 +17,8 @@ public readonly struct Id : IEquatable<Id>
 	public bool Equals(Id other)
 		=> this.Namespace == other.Namespace
 		&& this.Name == other.Name;
+	public override string ToString()
+		=> String.Concat(Namespace, ":", Name);
 	public static Id Of(string @namespace, string name)
 		=> new(@namespace, name);
 	public static Id Of(string name)

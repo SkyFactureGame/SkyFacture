@@ -1,5 +1,6 @@
 ﻿using Silk.NET.Input;
 using Silk.NET.Maths;
+using Silk.NET.OpenGL;
 using Silk.NET.Windowing;
 using System;
 using System.Diagnostics;
@@ -18,7 +19,6 @@ public unsafe class WindowsLauncher : ClientLauncher
 #if !DEBUG
 			NativeWindow.ShowWindow(NativeWindow.GetConsoleWindow(), DisplayType.Hide);
 #endif
-
 			WindowOptions options = new()
 			{
 				API = new GraphicsAPI(ContextAPI.OpenGL, new(3,3)),
@@ -71,7 +71,6 @@ public unsafe class WindowsLauncher : ClientLauncher
 	private readonly IWindow window;
 	public WindowsLauncher(string[] args, WindowOptions windowOptions)
 	{
-
 		window = Window.Create(windowOptions);
 		window.Load += Load;
 		window.Closing += Unload;
@@ -79,6 +78,8 @@ public unsafe class WindowsLauncher : ClientLauncher
 		window.Update += Update;
 		window.Resize += Resize;
 		window.Initialize();
+		App.Gl = window.CreateOpenGL();
+		this.Init();
 		
 		window.Run();
 	}
