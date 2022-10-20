@@ -1,7 +1,6 @@
 ﻿using SkyFacture.Content;
 using SkyFacture.Extensions;
 using SkyFacture.Graphics.Textures;
-using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,13 +30,12 @@ public abstract class ClientLauncher
 
 			if (ext is ".atlas")
 			{
-
 			}
 			else if (ext is ".png")
 			{
 				using Stream stream = asm.GetManifestResourceStream(name)!;
 				Sprite sprite = new(stream);
-				Reg<Sprite>(fileName, sprite);
+				Reg(fileName, sprite);
 			}
 		}
 	}
